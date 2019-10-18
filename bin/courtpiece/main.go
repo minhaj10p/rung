@@ -1,12 +1,12 @@
 package main
 
 import (
-	"github.com/minhajuddinkhan/courtpiece"
+	"github.com/minhajuddinkhan/rung"
 )
 
 func main() {
 
-	game := courtpiece.NewGame()
+	game := rung.NewGame()
 	game.DistributeCards()
 
 	// TODO:: start the game. lol

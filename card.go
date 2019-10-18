@@ -1,4 +1,4 @@
-package courtpiece
+package rung
 
 const (
 	Two   = iota

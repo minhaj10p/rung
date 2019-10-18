@@ -1,4 +1,4 @@
-package courtpiece
+package rung
 
 //Game a game of court piece
 type Game interface {

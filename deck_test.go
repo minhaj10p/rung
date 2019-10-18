@@ -1,43 +1,47 @@
-package courtpiece_test
+package rung_test
 
 import (
 	"testing"
 
-	"github.com/davecgh/go-spew/spew"
-
-	"github.com/minhajuddinkhan/courtpiece"
+	"github.com/minhajuddinkhan/rung"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestDeckShouldHaveFiftyTwoCards(t *testing.T) {
 
-	deck := courtpiece.NewDeck()
+	deck := rung.NewDeck()
 	assert.Equal(t, len(deck.CardsInDeck()), 52)
-}
-
-func TestIsCardNotPresentInDeck(t *testing.T) {
-
-	deck := courtpiece.NewDeck()
-	card, err := deck.DrawCard(0)
-	assert.Nil(t, err)
-	assert.False(t, deck.IsCardPresent(card))
 }
 
 func TestNewDeckHasFourOfSpades(t *testing.T) {
 
-	deck := courtpiece.NewDeck()
+	deck := rung.NewDeck()
 	found := true
 	for _, card := range deck.CardsInDeck() {
-		if card.House() == courtpiece.Spade && card.Number() == 4 {
+		if card.House() == rung.Spade && card.Number() == 4 {
 			found = true
 		}
 	}
 	assert.True(t, found)
 }
 
+func TestIsCardPresentInDeck(t *testing.T) {
+
+	deck := rung.NewDeck()
+	card := rung.NewCard(rung.Spade, rung.Ace)
+	deck.IsCardPresent(card)
+}
+func TestIsCardNotPresentInDeck(t *testing.T) {
+
+	deck := rung.NewDeck()
+	card, err := deck.DrawCard(0)
+	assert.Nil(t, err)
+	assert.False(t, deck.IsCardPresent(card))
+}
+
 func TestAfterDrawingCardFromDeck(t *testing.T) {
 
-	deck := courtpiece.NewDeck()
+	deck := rung.NewDeck()
 	card, err := deck.DrawCard(0)
 	assert.Nil(t, err)
 	assert.False(t, deck.IsCardPresent(card))
@@ -45,14 +49,8 @@ func TestAfterDrawingCardFromDeck(t *testing.T) {
 
 }
 
-func TestIsCardPresentInDeck(t *testing.T) {
-
-	deck := courtpiece.NewDeck()
-	card := courtpiece.NewCard(courtpiece.Spade, courtpiece.Ace)
-	deck.IsCardPresent(card)
-}
 func TestDrawCards(t *testing.T) {
-	deck := courtpiece.NewDeck()
+	deck := rung.NewDeck()
 	cards, err := deck.DrawCards(0, 2)
 	assert.Nil(t, err)
 	assert.False(t, deck.IsCardPresent(cards[0]))
@@ -63,7 +61,7 @@ func TestDrawCards(t *testing.T) {
 
 func TestPutCard(t *testing.T) {
 
-	deck := courtpiece.NewDeck()
+	deck := rung.NewDeck()
 	card, err := deck.DrawCard(0)
 	assert.Nil(t, err)
 	deck.PutCard(card)
@@ -72,7 +70,7 @@ func TestPutCard(t *testing.T) {
 
 func TestPutCards(t *testing.T) {
 
-	deck := courtpiece.NewDeck()
+	deck := rung.NewDeck()
 	cards, err := deck.DrawCards(0, 1)
 	assert.Nil(t, err)
 	assert.Equal(t, len(deck.CardsInDeck()), 52-2)
@@ -82,10 +80,9 @@ func TestPutCards(t *testing.T) {
 }
 func TestAfterShufflingDeck(t *testing.T) {
 
-	deck := courtpiece.NewDeck()
+	deck := rung.NewDeck()
 	err := deck.Shuffle(30)
 	assert.Nil(t, err)
 	assert.Equal(t, len(deck.CardsInDeck()), 52)
-	spew.Dump(deck.CardsInDeck())
 
 }

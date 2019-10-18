@@ -1,21 +1,21 @@
-package courtpiece_test
+package rung_test
 
 import (
 	"testing"
 
-	"github.com/minhajuddinkhan/courtpiece"
+	"github.com/minhajuddinkhan/rung"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestGameHasFourPlayers(t *testing.T) {
 
-	game := courtpiece.NewGame()
+	game := rung.NewGame()
 	assert.Equal(t, len(game.Players()), 4)
 }
 
 func TestEachPlayerHasZeroCardsBeforeDistribution(t *testing.T) {
 
-	game := courtpiece.NewGame()
+	game := rung.NewGame()
 	players := game.Players()
 
 	for _, player := range players {
@@ -25,7 +25,7 @@ func TestEachPlayerHasZeroCardsBeforeDistribution(t *testing.T) {
 }
 
 func TestEachPlayerHasThirteenCardsAfterDistribution(t *testing.T) {
-	game := courtpiece.NewGame()
+	game := rung.NewGame()
 	err := game.DistributeCards()
 	assert.Nil(t, err)
 	players := game.Players()
@@ -37,7 +37,7 @@ func TestEachPlayerHasThirteenCardsAfterDistribution(t *testing.T) {
 
 func TestNoTwoPlayersHaveSameCard(t *testing.T) {
 
-	game := courtpiece.NewGame()
+	game := rung.NewGame()
 	err := game.DistributeCards()
 	assert.Nil(t, err)
 	players := game.Players()
@@ -49,7 +49,7 @@ func TestNoTwoPlayersHaveSameCard(t *testing.T) {
 	playerTwoHasAceOfSpade := false
 
 	for _, card := range secondPlayer.CardsAtHand() {
-		if card.House() == cardWithfirstPlayer.House() && cardWithfirstPlayer.Number() == courtpiece.Ace {
+		if card.House() == cardWithfirstPlayer.House() && cardWithfirstPlayer.Number() == rung.Ace {
 			playerTwoHasAceOfSpade = true
 		}
 	}

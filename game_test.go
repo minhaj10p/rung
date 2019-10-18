@@ -1,0 +1,59 @@
+package courtpiece_test
+
+import (
+	"testing"
+
+	"github.com/minhajuddinkhan/courtpiece"
+	"github.com/stretchr/testify/assert"
+)
+
+func TestGameHasFourPlayers(t *testing.T) {
+
+	game := courtpiece.NewGame()
+	assert.Equal(t, len(game.Players()), 4)
+}
+
+func TestEachPlayerHasZeroCardsBeforeDistribution(t *testing.T) {
+
+	game := courtpiece.NewGame()
+	players := game.Players()
+
+	for _, player := range players {
+		assert.Equal(t, len(player.CardsAtHand()), 0)
+	}
+
+}
+
+func TestEachPlayerHasThirteenCardsAfterDistribution(t *testing.T) {
+	game := courtpiece.NewGame()
+	err := game.DistributeCards()
+	assert.Nil(t, err)
+	players := game.Players()
+	for _, p := range players {
+		assert.Equal(t, len(p.CardsAtHand()), 13)
+	}
+
+}
+
+func TestNoTwoPlayersHaveSameCard(t *testing.T) {
+
+	game := courtpiece.NewGame()
+	err := game.DistributeCards()
+	assert.Nil(t, err)
+	players := game.Players()
+
+	secondPlayer := players[1]
+
+	cardWithfirstPlayer := players[0].CardsAtHand()[0]
+	playerOneHasAceOfSpade := false
+	playerTwoHasAceOfSpade := false
+
+	for _, card := range secondPlayer.CardsAtHand() {
+		if card.House() == cardWithfirstPlayer.House() && cardWithfirstPlayer.Number() == courtpiece.Ace {
+			playerTwoHasAceOfSpade = true
+		}
+	}
+
+	assert.NotEqual(t, playerOneHasAceOfSpade, playerTwoHasAceOfSpade)
+
+}

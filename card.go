@@ -48,3 +48,18 @@ func (c *card) House() string {
 func (c *card) Number() int {
 	return c.cardNumber
 }
+
+//GetBiggestCard GetBiggestCard
+func GetBiggestCard(cards []Card, house string) Card {
+
+	max := 0
+	for i := 0; i < len(cards); i++ {
+		if cards[i].House() != house {
+			continue
+		}
+		if cards[i].Number() > cards[max].Number() {
+			max = i
+		}
+	}
+	return cards[max]
+}

@@ -9,18 +9,18 @@ import (
 
 func TestEmptyHandShouldHaveZeroCards(t *testing.T) {
 
-	hand := rung.NewHand()
+	hand := rung.NewHand(nil)
 	assert.Equal(t, len(hand.Cards()), 0)
 }
 
 func TestEmptyHandShouldHaveNoHouse(t *testing.T) {
-	hand := rung.NewHand()
+	hand := rung.NewHand(nil)
 	_, err := hand.House()
 	assert.NotNil(t, err)
 }
 func TestAddCardToHand(t *testing.T) {
 
-	hand := rung.NewHand()
+	hand := rung.NewHand(nil)
 	player := rung.NewPlayer(rung.SouthPlayer)
 	card := rung.NewCard(rung.Spade, rung.Ace)
 	err := player.ReceiveCard(card)
@@ -31,7 +31,7 @@ func TestAddCardToHand(t *testing.T) {
 
 func TestNoSamePlayerCanAddToHand(t *testing.T) {
 
-	hand := rung.NewHand()
+	hand := rung.NewHand(nil)
 	p1 := rung.NewPlayer(rung.EastPlayer)
 	c1 := rung.NewCard(rung.Spade, rung.Ace)
 	c2 := rung.NewCard(rung.Club, rung.Ace)
@@ -48,7 +48,7 @@ func TestNoSamePlayerCanAddToHand(t *testing.T) {
 
 func TestNoMoreThanFourCardsAtOneHand(t *testing.T) {
 
-	hand := rung.NewHand()
+	hand := rung.NewHand(nil)
 	player1 := rung.NewPlayer(rung.SouthPlayer)
 	player2 := rung.NewPlayer(rung.WestPlayer)
 	player3 := rung.NewPlayer(rung.EastPlayer)
@@ -90,7 +90,7 @@ func TestNoMoreThanFourCardsAtOneHand(t *testing.T) {
 
 func TestEmptyHandShouldHaveNoHead(t *testing.T) {
 
-	hand := rung.NewHand()
+	hand := rung.NewHand(nil)
 	headPlayer, err := hand.Head()
 	assert.Nil(t, headPlayer)
 	assert.NotNil(t, err)
@@ -98,7 +98,7 @@ func TestEmptyHandShouldHaveNoHead(t *testing.T) {
 
 func TestColorOfHandShouldBeOfTheFirstCardPlacedOnHand(t *testing.T) {
 
-	hand := rung.NewHand()
+	hand := rung.NewHand(nil)
 	p1 := rung.NewPlayer(rung.WestPlayer)
 	c1 := rung.NewCard(rung.Diamond, rung.Ace)
 	err := p1.ReceiveCard(c1)
@@ -112,7 +112,7 @@ func TestColorOfHandShouldBeOfTheFirstCardPlacedOnHand(t *testing.T) {
 
 func TestHeadShouldBeOfTheMostPowerfullCardAtHand(t *testing.T) {
 
-	hand := rung.NewHand()
+	hand := rung.NewHand(nil)
 	p1 := rung.NewPlayer(rung.SouthPlayer)
 	p2 := rung.NewPlayer(rung.EastPlayer)
 	p3 := rung.NewPlayer(rung.WestPlayer)
@@ -141,7 +141,7 @@ func TestHeadShouldBeOfTheMostPowerfullCardAtHand(t *testing.T) {
 
 func TestPlayerCannotPlayCard_OfDifferentHouseThanHouseOfHand(t *testing.T) {
 
-	hand := rung.NewHand()
+	hand := rung.NewHand(nil)
 	p1 := rung.NewPlayer(rung.SouthPlayer)
 	p2 := rung.NewPlayer(rung.EastPlayer)
 
@@ -162,5 +162,68 @@ func TestPlayerCannotPlayCard_OfDifferentHouseThanHouseOfHand(t *testing.T) {
 	//p1 plays heartAce on a spade hand eve
 	err := hand.AddCard(p1, rung.SecondCardAtHand)
 	assert.NotNil(t, err)
+
+}
+
+func TestPlayerCanMakeTrump(t *testing.T) {
+
+	hand := rung.NewHand(nil)
+	p1 := rung.NewPlayer(rung.SouthPlayer)
+	p2 := rung.NewPlayer(rung.NorthPlayer)
+	p3 := rung.NewPlayer(rung.EastPlayer)
+	p4 := rung.NewPlayer(rung.WestPlayer)
+
+	c1 := rung.NewCard(rung.Spade, rung.Ace)
+	c2 := rung.NewCard(rung.Spade, rung.King)
+	c3 := rung.NewCard(rung.Spade, rung.Queen)
+	c4 := rung.NewCard(rung.Heart, rung.Three)
+
+	p1.ReceiveCard(c1)
+	p2.ReceiveCard(c2)
+	p3.ReceiveCard(c3)
+	p4.ReceiveCard(c4)
+
+	hand.AddCard(p1, rung.FirstCardAtHand)
+	hand.AddCard(p2, rung.FirstCardAtHand)
+	hand.AddCard(p4, rung.FirstCardAtHand)
+	hand.AddCard(p3, rung.FirstCardAtHand)
+
+	h, _ := hand.House()
+	trump, _ := hand.Trump()
+	assert.Equal(t, h, rung.Spade)
+	assert.Equal(t, trump, rung.Heart)
+
+}
+
+func TestCannotMakeTrumpAgainIfTrumpAlreadyDeclared(t *testing.T) {
+
+	trump := rung.Spade
+	hand := rung.NewHand(&trump)
+	p1 := rung.NewPlayer(rung.SouthPlayer)
+	p2 := rung.NewPlayer(rung.NorthPlayer)
+	p3 := rung.NewPlayer(rung.EastPlayer)
+	p4 := rung.NewPlayer(rung.WestPlayer)
+
+	c1 := rung.NewCard(rung.Spade, rung.Three)
+	c2 := rung.NewCard(rung.Spade, rung.King)
+	c3 := rung.NewCard(rung.Spade, rung.Queen)
+	c4 := rung.NewCard(rung.Heart, rung.Ace)
+
+	p1.ReceiveCard(c1)
+	p2.ReceiveCard(c2)
+	p3.ReceiveCard(c3)
+	p4.ReceiveCard(c4)
+
+	hand.AddCard(p1, rung.FirstCardAtHand)
+	hand.AddCard(p2, rung.FirstCardAtHand)
+	hand.AddCard(p4, rung.FirstCardAtHand)
+	hand.AddCard(p3, rung.FirstCardAtHand)
+
+	h, _ := hand.House()
+	trump, _ = hand.Trump()
+	player, _ := hand.Head()
+	assert.Equal(t, h, rung.Spade)
+	assert.Equal(t, trump, rung.Spade)
+	assert.Equal(t, player.Name(), p2.Name())
 
 }

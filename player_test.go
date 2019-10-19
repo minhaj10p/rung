@@ -72,19 +72,27 @@ func TestPlayerInput(t *testing.T) {
 
 	for i := 0; i < 10; i++ {
 		go func(p1, p2 rung.Player, i int) {
-			p1.Input() <- i
-			p2.Input() <- i
+			p1.ThrowCard(i)
+			p2.ThrowCard(i)
 		}(p1, p2, i)
 	}
 
 	count := 0
+	doneCh := make(chan interface{})
 	for i := 0; i < 20; i++ {
-		select {
-		case <-p1.Input():
-			count++
-		case <-p2.Input():
-			count++
-		}
+		go func() {
+			p1.CardOnTable()
+			doneCh <- true
+		}()
+		go func() {
+			p2.CardOnTable()
+			doneCh <- true
+		}()
+
+	}
+	for count < 20 {
+		<-doneCh
+		count++
 	}
 	assert.Equal(t, count, 20)
 }

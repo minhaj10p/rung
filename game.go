@@ -100,8 +100,7 @@ func (g *game) PlayHand(turn int, trump *string) (Hand, error) {
 	handCh := make(chan Move, 4)
 	for _, p := range g.players {
 		go func(player Player) {
-			// fmt.Println(player.Name())
-			cardAt := <-player.Input()
+			cardAt := player.CardOnTable()
 			handCh <- Move{Player: player, CardAt: cardAt}
 		}(p)
 	}
@@ -116,43 +115,5 @@ func (g *game) PlayHand(turn int, trump *string) (Hand, error) {
 		}
 	}
 	return hand, nil
-
-	// if turn == FirstHandForClub {
-	// 	player, i := g.PlayerToStart()
-	// 	cardAtHand := <-player.Input()
-	// 	hand.AddCard(player, cardAtHand)
-	// 	g.players = append(g.players[:i], g.players[i+1:]...)
-	// 	cardsDelt++
-	// }
-
-	// for {
-	// 	fmt.Println(g.players[0].Name(), g.players[1].Name(), g.players[2].Name())
-	// 	select {
-	// 	case msg := <-g.players[0].Input():
-	// 		fmt.Println("REC from", g.players[0].Name())
-	// 		hand.AddCard(g.players[0], msg)
-	// 		cardsDelt++
-	// 		if cardsToDeal == cardsDelt {
-	// 			return hand, nil
-	// 		}
-
-	// 	case msg := <-g.players[1].Input():
-
-	// 		fmt.Println("REC from!", g.players[0].Name())
-	// 		hand.AddCard(g.players[1], msg)
-	// 		cardsDelt++
-	// 		if cardsToDeal == cardsDelt {
-	// 			return hand, nil
-	// 		}
-
-	// 	case msg := <-g.players[2].Input():
-	// 		fmt.Println("REC!")
-	// 		hand.AddCard(g.players[2], msg)
-	// 		cardsDelt++
-	// 		if cardsToDeal == cardsDelt {
-	// 			return hand, nil
-	// 		}
-	// 	}
-	// }
 
 }

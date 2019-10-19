@@ -40,8 +40,11 @@ type Player interface {
 
 	//HasCard(c Card) bool
 	HasCard(c Card) (hasCard bool, cardAtIndex int)
-	//Throw throw returns a channel identifying the decision of what card to throw
-	Input() chan int
+
+	//Throw ThrowCard
+	ThrowCard(cardAt int)
+
+	CardOnTable() int
 }
 
 type player struct {
@@ -112,6 +115,12 @@ func (p *player) HasHouse(house string) bool {
 	}
 	return false
 }
-func (p *player) Input() chan int {
-	return p.decisionChannel
+func (p *player) ThrowCard(cardAt int) {
+	go func() {
+		p.decisionChannel <- cardAt
+	}()
+}
+
+func (p *player) CardOnTable() int {
+	return <-p.decisionChannel
 }

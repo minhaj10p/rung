@@ -4,8 +4,27 @@ import (
 	"fmt"
 )
 
+const (
+	FirstCardAtHand      = iota
+	SecondCardAtHand     = iota
+	ThirdCardAtHand      = iota
+	FourthCardAtHand     = iota
+	FifthCardAtHand      = iota
+	SixthCardAtHand      = iota
+	SeventhCardAtHand    = iota
+	EidthCardAtHand      = iota
+	NinthCardAtHand      = iota
+	TenthCardAtHand      = iota
+	EleventhCardAtHand   = iota
+	TwelvthCardAtHand    = iota
+	ThirteenthCardAtHand = iota
+)
+
 //Player Player
 type Player interface {
+
+	//Name returns name of the player
+	Name() string
 
 	//CardsAtHand returns card at hand
 	CardsAtHand() []Card
@@ -13,8 +32,11 @@ type Player interface {
 	//DrawCard draws a card
 	DrawCard(i int) (Card, error)
 
-	//ReceiveCard
+	//ReceiveCard receives a card
 	ReceiveCard(c Card) error
+
+	//HasHouse returns if a player has any card of the given house
+	HasHouse(house string) bool
 }
 
 type player struct {
@@ -25,6 +47,10 @@ type player struct {
 //NewPlayer NewPlayer
 func NewPlayer(name string) Player {
 	return &player{cardsAtHand: []Card{}, name: name}
+}
+
+func (p *player) Name() string {
+	return p.name
 }
 
 func (p *player) CardsAtHand() []Card {
@@ -41,12 +67,33 @@ func (p *player) DrawCard(i int) (Card, error) {
 	return card, nil
 }
 
+func (p *player) alreadyAtHand(c Card) bool {
+	for _, atHand := range p.cardsAtHand {
+		if isSameCard(atHand, c) {
+			return true
+		}
+	}
+	return false
+}
 func (p *player) ReceiveCard(c Card) error {
 
 	if len(p.cardsAtHand) == 13 {
 		return fmt.Errorf("cannot receive more cards. all thirteen at hand")
 	}
+	if p.alreadyAtHand(c) {
+		return fmt.Errorf("cannot receive a card it already has")
+	}
+
 	p.cardsAtHand = append(p.cardsAtHand, c)
 	return nil
 
+}
+
+func (p *player) HasHouse(house string) bool {
+	for _, c := range p.CardsAtHand() {
+		if c.House() == house {
+			return true
+		}
+	}
+	return false
 }

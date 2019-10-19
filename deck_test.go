@@ -29,7 +29,8 @@ func TestIsCardPresentInDeck(t *testing.T) {
 
 	deck := rung.NewDeck()
 	card := rung.NewCard(rung.Spade, rung.Ace)
-	deck.IsCardPresent(card)
+	assert.True(t, deck.IsCardPresent(card))
+
 }
 func TestIsCardNotPresentInDeck(t *testing.T) {
 

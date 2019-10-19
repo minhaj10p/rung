@@ -37,20 +37,35 @@ type Player interface {
 
 	//HasHouse returns if a player has any card of the given house
 	HasHouse(house string) bool
+
+	//HasCard(c Card) bool
+	HasCard(c Card) (hasCard bool, cardAtIndex int)
+	//Throw throw returns a channel identifying the decision of what card to throw
+	Input() chan int
 }
 
 type player struct {
-	cardsAtHand []Card
-	name        string
+	cardsAtHand     []Card
+	name            string
+	decisionChannel chan int
 }
 
 //NewPlayer NewPlayer
 func NewPlayer(name string) Player {
-	return &player{cardsAtHand: []Card{}, name: name}
+	return &player{cardsAtHand: []Card{}, name: name, decisionChannel: make(chan int)}
 }
 
 func (p *player) Name() string {
 	return p.name
+}
+
+func (p *player) HasCard(c Card) (bool, int) {
+	for cardAtIndex, card := range p.cardsAtHand {
+		if isSameCard(c, card) {
+			return true, cardAtIndex
+		}
+	}
+	return false, -1
 }
 
 func (p *player) CardsAtHand() []Card {
@@ -96,4 +111,7 @@ func (p *player) HasHouse(house string) bool {
 		}
 	}
 	return false
+}
+func (p *player) Input() chan int {
+	return p.decisionChannel
 }

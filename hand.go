@@ -12,6 +12,9 @@ type Hand interface {
 	//AddCard adds a card at the current hand
 	AddCard(playedBy Player, cardAtHandIndex int) error
 
+	//HasCard checks if hand has card
+	HasCard(c Card) (hasCard bool, atIndex int)
+
 	//IsComplete returns if a hand is complete or not
 	IsComplete() bool
 
@@ -55,6 +58,14 @@ func (h *hand) IsComplete() bool {
 	return len(h.cards) == 4
 }
 
+func (h *hand) HasCard(c Card) (bool, int) {
+	for cardAtIndex, card := range h.cards {
+		if isSameCard(c, card) {
+			return true, cardAtIndex
+		}
+	}
+	return false, -1
+}
 func (h *hand) HasAlreadyPlayed(pl Player) bool {
 
 	for _, player := range h.hasPlayed {

@@ -64,3 +64,27 @@ func TestIfPlayerHasCardOfGivenHouse(t *testing.T) {
 	assert.True(t, player.HasHouse(rung.Diamond))
 
 }
+
+func TestPlayerInput(t *testing.T) {
+
+	p1 := rung.NewPlayer(rung.SouthPlayer)
+	p2 := rung.NewPlayer(rung.WestPlayer)
+
+	for i := 0; i < 10; i++ {
+		go func(p1, p2 rung.Player, i int) {
+			p1.Input() <- i
+			p2.Input() <- i
+		}(p1, p2, i)
+	}
+
+	count := 0
+	for i := 0; i < 20; i++ {
+		select {
+		case <-p1.Input():
+			count++
+		case <-p2.Input():
+			count++
+		}
+	}
+	assert.Equal(t, count, 20)
+}

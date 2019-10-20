@@ -18,16 +18,43 @@ func TestRingHasFourPlayers(t *testing.T) {
 	assert.Equal(t, 4, len(ring.Players()))
 }
 
-func TestAfterSouthPlayerNextPlayerIsWest(t *testing.T) {
-	playOrder := []string{rung.SouthPlayer, rung.WestPlayer, rung.NorthPlayer, rung.EastPlayer}
+func TestNext_AfterSouthPlayerNextPlayerIsWest(t *testing.T) {
+	playerNames := []string{rung.NorthPlayer, rung.EastPlayer, rung.SouthPlayer, rung.WestPlayer}
 	var players []rung.Player
 	for i := 0; i < 4; i++ {
-		players = append(players, rung.NewPlayer(playOrder[i]))
+		players = append(players, rung.NewPlayer(playerNames[i]))
 	}
 	ring, err := rung.NewRing(players)
 	assert.Nil(t, err)
-	player := ring.Next()
-	assert.Equal(t, rung.WestPlayer, player.Name())
+
+	ring.SetCurrentPlayer(players[0])
+	p, err := ring.Next()
+	assert.Nil(t, err)
+	assert.Equal(t, p.Name(), rung.EastPlayer)
+
+	p, err = ring.Next()
+	assert.Nil(t, err)
+	assert.Equal(t, p.Name(), rung.SouthPlayer)
+
+	p, err = ring.Next()
+	assert.Nil(t, err)
+	assert.Equal(t, p.Name(), rung.WestPlayer)
+
+	p, err = ring.Next()
+	assert.Nil(t, err)
+	assert.Equal(t, p.Name(), rung.NorthPlayer)
+
+}
+
+func TestIsCurrentPlayerSetInRing(t *testing.T) {
+	playerNames := []string{rung.NorthPlayer, rung.EastPlayer, rung.SouthPlayer, rung.WestPlayer}
+	var players []rung.Player
+	for i := 0; i < 4; i++ {
+		players = append(players, rung.NewPlayer(playerNames[i]))
+	}
+	ring, err := rung.NewRing(players)
+	assert.Nil(t, err)
+	assert.False(t, false, ring.HasCurrentPlayer())
 
 }
 

@@ -25,6 +25,7 @@ type game struct {
 	deck          Deck
 	handsOnGround []Hand
 	handsWon      map[string]int
+	ring          Ring
 }
 
 const (
@@ -40,7 +41,10 @@ func NewGame() Game {
 		players = append(players, NewPlayer(playerNames[i]))
 	}
 	deck := NewDeck()
+	r, _ := NewRing(players)
+
 	return &game{
+		ring:     r,
 		players:  players,
 		deck:     deck,
 		handsWon: make(map[string]int, 4),
@@ -92,17 +96,28 @@ func (g *game) PlayHand(turn int, trump *string, lastHead Player) (Hand, error) 
 				hand.AddCard(p, cardAt)
 				g.players = append(g.players[:i], g.players[i+1:]...)
 				cardsDelt++
+				g.ring.SetCurrentPlayer(p)
 				break
 			}
 		}
 	}
 
-	for _, p := range g.players {
+	if cardsDelt == 0 {
+		g.ring.SetCurrentPlayer(lastHead)
+	}
+
+	for i := 0; i < 4-cardsDelt; i++ {
+		p, err := g.ring.Next()
+		if err != nil {
+			return nil, err
+		}
 		go func(player Player) {
 			cardAt := player.CardOnTable()
 			handCh <- Move{Player: player, CardAt: cardAt}
 		}(p)
+
 	}
+
 	for cardsDelt < 4 {
 		select {
 		case move := <-handCh:
@@ -123,6 +138,7 @@ func (g *game) PlayHand(turn int, trump *string, lastHead Player) (Hand, error) 
 	if err != nil {
 		return nil, err
 	}
+	g.ring.SetCurrentPlayer(head)
 
 	if head.Name() == lastHead.Name() {
 		g.handsWon[lastHead.Name()] = len(g.handsOnGround)

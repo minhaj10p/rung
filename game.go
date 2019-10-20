@@ -79,16 +79,10 @@ func isFirstHand(turn int) bool {
 	return turn == FirstHandForClub
 }
 
-type Move struct {
-	Player Player
-	CardAt int
-}
-
 func (g *game) PlayHand(turn int, trump *string, lastHead Player) (Hand, error) {
 
 	hand := NewHand(trump)
 	cardsDelt := 0
-	handCh := make(chan Move, 4)
 
 	if isFirstHand(turn) {
 		for i, p := range g.players {
@@ -107,27 +101,18 @@ func (g *game) PlayHand(turn int, trump *string, lastHead Player) (Hand, error) 
 	}
 
 	for i := 0; i < 4-cardsDelt; i++ {
-		p, err := g.ring.Next()
+		player, err := g.ring.Next()
 		if err != nil {
 			return nil, err
 		}
-		go func(player Player) {
-			cardAt := player.CardOnTable()
-			handCh <- Move{Player: player, CardAt: cardAt}
-		}(p)
-
-	}
-
-	for cardsDelt < 4 {
-		select {
-		case move := <-handCh:
-			err := hand.AddCard(move.Player, move.CardAt)
-			if err != nil {
-				return nil, err
-			}
-			cardsDelt++
+		cardAt := player.CardOnTable()
+		err = hand.AddCard(player, cardAt)
+		if err != nil {
+			return nil, err
 		}
+
 	}
+
 	g.handsOnGround = append(g.handsOnGround, hand)
 
 	if isFirstHand(turn) {

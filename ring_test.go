@@ -58,5 +58,8 @@ func TestIsCurrentPlayerSetInRing(t *testing.T) {
 
 }
 
+//TODO:: call next without setting current player. expect error
+//TODO:: create ring with three players. expect error
 //TODO:: Add Get current player tests
 //TODO:: Add Set current player tests
+//TODO:: test with player name not in ring map. expect error

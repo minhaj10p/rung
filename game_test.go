@@ -65,16 +65,14 @@ func TestFirstHandMustHaveFourCards(t *testing.T) {
 	assert.Nil(t, game.DistributeCards())
 	players := game.Players()
 
-	go func() {
-		for _, p := range players {
-			for i, c := range p.CardsAtHand() {
-				if c.House() == rung.Club {
-					p.ThrowCard(i)
-					break
-				}
+	for _, p := range players {
+		for i, c := range p.CardsAtHand() {
+			if c.House() == rung.Club {
+				p.ThrowCard(i)
+				break
 			}
 		}
-	}()
+	}
 
 	handOutCome, err := game.PlayHand(0, nil, nil)
 	assert.Nil(t, err)

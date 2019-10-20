@@ -1,5 +1,7 @@
 package rung
 
+import "github.com/minhajuddinkhan/pattay"
+
 //Game a game of court piece
 type Game interface {
 	//Players returns the players
@@ -22,10 +24,10 @@ type Game interface {
 
 type game struct {
 	players       []Player
-	deck          Deck
+	deck          pattay.Deck
 	handsOnGround []Hand
 	handsWon      map[string]int
-	ring          Ring
+	ring          pattay.Ring
 }
 
 const (
@@ -40,8 +42,14 @@ func NewGame() Game {
 	for i := 0; i < 4; i++ {
 		players = append(players, NewPlayer(playerNames[i]))
 	}
-	deck := NewDeck()
-	r, _ := NewRing(players[0], players[1], players[2], players[3])
+	deck := pattay.NewDeck()
+
+	var rp []pattay.RingPlayer
+	for i := 0; i < len(players); i++ {
+		rp = append(rp, players[i].(pattay.RingPlayer))
+	}
+
+	r, _ := pattay.NewRing(rp...)
 
 	return &game{
 		ring:     r,
@@ -86,7 +94,8 @@ func (g *game) PlayHand(turn int, trump *string, lastHead Player) (Hand, error) 
 
 	if isFirstHand(turn) {
 		for i, p := range g.players {
-			if has, cardAt := p.HasCard(NewCard(Club, Two)); has {
+			clubTwo := pattay.NewCard(pattay.Club, pattay.Two)
+			if has, cardAt := p.HasCard(clubTwo); has {
 				hand.AddCard(p, cardAt)
 				g.players = append(g.players[:i], g.players[i+1:]...)
 				cardsDelt++

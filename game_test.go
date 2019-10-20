@@ -3,6 +3,7 @@ package rung_test
 import (
 	"testing"
 
+	"github.com/minhajuddinkhan/pattay"
 	"github.com/minhajuddinkhan/rung"
 	"github.com/minhajuddinkhan/rung/dataset"
 	"github.com/stretchr/testify/assert"
@@ -50,7 +51,7 @@ func TestGame_NoTwoPlayersHaveSameCard(t *testing.T) {
 	playerTwoHasAceOfSpade := false
 
 	for _, card := range secondPlayer.CardsAtHand() {
-		if card.House() == cardWithfirstPlayer.House() && cardWithfirstPlayer.Number() == rung.Ace {
+		if card.House() == cardWithfirstPlayer.House() && cardWithfirstPlayer.Number() == pattay.Ace {
 			playerTwoHasAceOfSpade = true
 		}
 	}
@@ -67,7 +68,7 @@ func TestGame_FirstHandMustHaveFourCards(t *testing.T) {
 
 	for _, p := range players {
 		for i, c := range p.CardsAtHand() {
-			if c.House() == rung.Club {
+			if c.House() == pattay.Club {
 				p.ThrowCard(i)
 				break
 			}
@@ -87,15 +88,15 @@ func TestGame_FirstHandMustHaveTwoOfClubs(t *testing.T) {
 	p1, i1 := dataset.PlayerWithTwoOfClubs(game)
 	others := dataset.PLayersWithoutTwoOfClubs(game)
 
-	assert.True(t, p1.HasHouse(rung.Club))
-	assert.True(t, others[0].HasHouse(rung.Club))
-	assert.True(t, others[1].HasHouse(rung.Club))
-	assert.True(t, others[2].HasHouse(rung.Club))
+	assert.True(t, p1.HasHouse(pattay.Club))
+	assert.True(t, others[0].HasHouse(pattay.Club))
+	assert.True(t, others[1].HasHouse(pattay.Club))
+	assert.True(t, others[2].HasHouse(pattay.Club))
 
 	p1.ThrowCard(i1)
 	for _, px := range others {
 		for j, c := range px.CardsAtHand() {
-			if c.House() == rung.Club {
+			if c.House() == pattay.Club {
 				px.ThrowCard(j)
 			}
 		}
@@ -104,7 +105,7 @@ func TestGame_FirstHandMustHaveTwoOfClubs(t *testing.T) {
 	hand, err := game.PlayHand(0, nil, nil)
 	assert.Nil(t, err)
 	assert.Equal(t, len(hand.Cards()), 4)
-	has, _ := hand.HasCard(rung.NewCard(rung.Club, rung.Two))
+	has, _ := hand.HasCard(pattay.NewCard(pattay.Club, pattay.Two))
 	assert.True(t, has)
 }
 
@@ -112,17 +113,17 @@ func TestGame_ConsecutiveHeadsPlayerShouldWinHandsAtTable(t *testing.T) {
 	game := rung.NewGame()
 	game.ShuffleDeck(20)
 	game.DistributeCards()
-	trump := rung.Spade
+	trump := pattay.Spade
 	players := game.Players()
 
 	var biggestPlayer rung.Player
 
-	var spades []rung.Card
+	var spades []pattay.Card
 	for _, x := range players {
 		spade, at, err := x.AnySpade()
 		assert.Nil(t, err)
 		spades = append(spades, spade)
-		if spade.Number() == rung.GetBiggestCard(spades, rung.Spade).Number() {
+		if spade.Number() == pattay.GetBiggestCard(spades, pattay.Spade).Number() {
 			biggestPlayer = x
 		}
 		x.ThrowCard(at)

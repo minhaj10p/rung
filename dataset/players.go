@@ -1,6 +1,7 @@
 package dataset
 
 import (
+	"github.com/minhajuddinkhan/pattay"
 	"github.com/minhajuddinkhan/rung"
 )
 
@@ -10,7 +11,7 @@ func PlayerWithTwoOfClubs(g rung.Game) (rung.Player, int) {
 
 	for _, p := range players {
 		for k, c := range p.CardsAtHand() {
-			if c.House() == rung.Club && c.Number() == rung.Two {
+			if c.House() == pattay.Club && c.Number() == pattay.Two {
 				return p, k
 			}
 		}
@@ -20,7 +21,7 @@ func PlayerWithTwoOfClubs(g rung.Game) (rung.Player, int) {
 }
 func PLayersWithoutTwoOfClubs(g rung.Game) []rung.Player {
 
-	twoClub := rung.NewCard(rung.Club, rung.Two)
+	twoClub := pattay.NewCard(pattay.Club, pattay.Two)
 
 	var without2Clubs []rung.Player
 	for _, p := range g.Players() {

@@ -2,18 +2,20 @@ package rung
 
 import (
 	"fmt"
+
+	"github.com/minhajuddinkhan/pattay"
 )
 
 //Hand Round of a card
 type Hand interface {
 	//Cards returns the list of cards on a hand
-	Cards() []Card
+	Cards() []pattay.Card
 
 	//AddCard adds a card at the current hand
 	AddCard(playedBy Player, cardAtHandIndex int) error
 
 	//HasCard checks if hand has card
-	HasCard(c Card) (hasCard bool, atIndex int)
+	HasCard(c pattay.Card) (hasCard bool, atIndex int)
 
 	//IsComplete returns if a hand is complete or not
 	IsComplete() bool
@@ -28,14 +30,14 @@ type Hand interface {
 	Trump() (string, error)
 }
 type hand struct {
-	cards     []Card
+	cards     []pattay.Card
 	hasPlayed []Player
 	house     string
 	head      Player
 	trump     string
 }
 
-func (h *hand) Cards() []Card {
+func (h *hand) Cards() []pattay.Card {
 	return h.cards
 }
 
@@ -58,8 +60,8 @@ func (h *hand) IsComplete() bool {
 	return len(h.cards) == 4
 }
 
-func (h *hand) HasCard(c Card) (bool, int) {
-	_, at, err := FindCardInCards(c, h.cards)
+func (h *hand) HasCard(c pattay.Card) (bool, int) {
+	_, at, err := pattay.FindCardInCards(c, h.cards)
 	if err != nil {
 		return false, -1
 	}
@@ -81,11 +83,11 @@ func (h *hand) IsEmpty() bool {
 	return len(h.cards) == 0
 }
 
-func (h *hand) isSameHouse(c Card) bool {
+func (h *hand) isSameHouse(c pattay.Card) bool {
 	return c.House() == h.house
 }
 
-func (h *hand) validateCard(pl Player, c Card) error {
+func (h *hand) validateCard(pl Player, c pattay.Card) error {
 
 	if h.IsComplete() {
 		return fmt.Errorf("hand is complete")
@@ -96,7 +98,7 @@ func (h *hand) validateCard(pl Player, c Card) error {
 	}
 
 	for _, card := range h.cards {
-		if isSameCard(card, c) {
+		if pattay.IsSameCard(card, c) {
 			return fmt.Errorf("one hand cannot have two same cards")
 		}
 	}
@@ -104,9 +106,9 @@ func (h *hand) validateCard(pl Player, c Card) error {
 
 }
 
-func (h *hand) trumpCardsAtHand() []Card {
+func (h *hand) trumpCardsAtHand() []pattay.Card {
 
-	var cards []Card
+	var cards []pattay.Card
 	for _, c := range h.cards {
 		if c.House() == h.trump {
 			cards = append(cards, c)
@@ -119,8 +121,8 @@ func (h *hand) isTrumpDeclared() bool {
 	return h.trump != ""
 }
 
-func (h *hand) setHeadForBiggestCard(cards []Card, c Card, house string, pl Player) {
-	biggestCardAtHand := GetBiggestCard(cards, house)
+func (h *hand) setHeadForBiggestCard(cards []pattay.Card, c pattay.Card, house string, pl Player) {
+	biggestCardAtHand := pattay.GetBiggestCard(cards, house)
 	if c.Number() > biggestCardAtHand.Number() {
 		h.head = pl
 	}

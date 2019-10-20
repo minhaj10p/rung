@@ -6,10 +6,19 @@ import (
 
 //Game a game of court piece
 type Game interface {
+	//Players returns the players
 	Players() []Player
+	//DistributeCards distrubutes card among players of the game
 	DistributeCards() error
-	PlayHand(turn int, trump *string) (Hand, error)
+
+	//PlayHand begins play the hand
+	PlayHand(turn int, trump *string, lastHead Player) (Hand, error)
+
+	//ShuffleDeck shuffes the deck n times
 	ShuffleDeck(n int) error
+
+	//HandsOnGround returns the hands on ground that are not won yet.
+	HandsOnGround() []Hand
 }
 
 type game struct {
@@ -93,11 +102,23 @@ type Move struct {
 	CardAt int
 }
 
-func (g *game) PlayHand(turn int, trump *string) (Hand, error) {
+func (g *game) PlayHand(turn int, trump *string, lastHead Player) (Hand, error) {
 
-	hand := NewHand(nil)
+	hand := NewHand(trump)
 	cardsDelt := 0
 	handCh := make(chan Move, 4)
+
+	if turn == FirstHandForClub {
+		for i, p := range g.players {
+			if has, cardAt := p.HasCard(NewCard(Club, Two)); has {
+				hand.AddCard(p, cardAt)
+				g.players = append(g.players[:i], g.players[i+1:]...)
+				cardsDelt++
+				break
+			}
+		}
+	}
+
 	for _, p := range g.players {
 		go func(player Player) {
 			cardAt := player.CardOnTable()
@@ -116,4 +137,9 @@ func (g *game) PlayHand(turn int, trump *string) (Hand, error) {
 	}
 	return hand, nil
 
+}
+
+func (g *game) HandsOnGround() []Hand {
+
+	return nil
 }

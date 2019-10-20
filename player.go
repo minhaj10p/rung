@@ -41,15 +41,29 @@ type Player interface {
 	//HasCard(c Card) bool
 	HasCard(c Card) (hasCard bool, cardAtIndex int)
 
-	//Throw ThrowCard
+	//Throw enqueues throwing of a card from players deck so the game can receive it
 	ThrowCard(cardAt int)
 
+	//CardOnTable receives the card from the queue to be added in the game's current hand
 	CardOnTable() int
+
+	//AnySpade returns any spade if it has one
+	AnySpade() (Card, int, error)
+
+	//AnyClub returns any club if it has one
+	AnyClub() (Card, int, error)
+
+	//AnyHeart any heart if it has one
+	AnyHeart() (Card, int, error)
+
+	//AnyDiamond returns any diamond if it has one
+	AnyDiamond() (Card, int, error)
 }
 
 type player struct {
-	cardsAtHand     []Card
-	name            string
+	cardsAtHand []Card
+	name        string
+	//TODO:: come up with a better name for the queue
 	decisionChannel chan int
 }
 
@@ -123,4 +137,30 @@ func (p *player) ThrowCard(cardAt int) {
 
 func (p *player) CardOnTable() int {
 	return <-p.decisionChannel
+}
+
+func (p *player) anyCardOfHouse(house string) (Card, int, error) {
+	for at, c := range p.CardsAtHand() {
+		if c.House() == house {
+			return c, at, nil
+		}
+	}
+	return nil, -1, fmt.Errorf("player doesn't have any %s cards", house)
+
+}
+
+func (p *player) AnyDiamond() (Card, int, error) {
+	return p.anyCardOfHouse(Diamond)
+}
+
+func (p *player) AnySpade() (Card, int, error) {
+	return p.anyCardOfHouse(Spade)
+}
+
+func (p *player) AnyClub() (Card, int, error) {
+	return p.anyCardOfHouse(Club)
+}
+
+func (p *player) AnyHeart() (Card, int, error) {
+	return p.anyCardOfHouse(Heart)
 }

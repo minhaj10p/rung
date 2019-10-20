@@ -59,27 +59,27 @@ func TestNoTwoPlayersHaveSameCard(t *testing.T) {
 
 }
 
-// func TestFirstHandMustHaveFourCards(t *testing.T) {
-// 	game := rung.NewGame()
-// 	game.ShuffleDeck(20)
-// 	assert.Nil(t, game.DistributeCards())
-// 	players := game.Players()
+func TestFirstHandMustHaveFourCards(t *testing.T) {
+	game := rung.NewGame()
+	game.ShuffleDeck(20)
+	assert.Nil(t, game.DistributeCards())
+	players := game.Players()
 
-// 	go func() {
-// 		for _, p := range players {
-// 			for i, c := range p.CardsAtHand() {
-// 				if c.House() == rung.Club {
-// 					p.Input() <- i
-// 					break
-// 				}
-// 			}
-// 		}
-// 	}()
+	go func() {
+		for _, p := range players {
+			for i, c := range p.CardsAtHand() {
+				if c.House() == rung.Club {
+					p.ThrowCard(i)
+					break
+				}
+			}
+		}
+	}()
 
-// 	handOutCome, err := game.PlayHand(0, nil)
-// 	assert.Nil(t, err)
-// 	assert.Equal(t, len(handOutCome.Cards()), 4)
-// }
+	handOutCome, err := game.PlayHand(0, nil, nil)
+	assert.Nil(t, err)
+	assert.Equal(t, len(handOutCome.Cards()), 4)
+}
 
 func TestFirstHandMustHaveTwoOfClubs(t *testing.T) {
 
@@ -103,7 +103,37 @@ func TestFirstHandMustHaveTwoOfClubs(t *testing.T) {
 		}
 	}
 
-	hand, err := game.PlayHand(0, nil)
+	hand, err := game.PlayHand(0, nil, nil)
 	assert.Nil(t, err)
 	assert.Equal(t, len(hand.Cards()), 4)
+	has, _ := hand.HasCard(rung.NewCard(rung.Club, rung.Two))
+	assert.True(t, has)
+}
+
+func TestConsecutiveHeadsPlayerShouldWinHandsAtTable(t *testing.T) {
+	game := rung.NewGame()
+	game.ShuffleDeck(20)
+	game.DistributeCards()
+	trump := rung.Spade
+	players := game.Players()
+
+	var biggestPlayer rung.Player
+
+	var spades []rung.Card
+	for _, x := range players {
+		spade, at, err := x.AnySpade()
+		assert.Nil(t, err)
+		spades = append(spades, spade)
+		if spade.Number() == rung.GetBiggestCard(spades, rung.Spade).Number() {
+			biggestPlayer = x
+		}
+		x.ThrowCard(at)
+	}
+
+	hand, err := game.PlayHand(1, &trump, biggestPlayer)
+	assert.Nil(t, err)
+	player, err := hand.Head()
+	assert.Nil(t, err)
+	assert.Equal(t, player.Name(), player.Name())
+	assert.Equal(t, len(game.HandsOnGround()), 0)
 }

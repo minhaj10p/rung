@@ -96,3 +96,44 @@ func TestPlayerInput(t *testing.T) {
 	}
 	assert.Equal(t, count, 20)
 }
+
+func TestPlayerHasAnySpade(t *testing.T) {
+
+	p := rung.NewPlayer(rung.WestPlayer)
+	p.ReceiveCard(rung.NewCard(rung.Spade, rung.Ace))
+
+	card, at, err := p.AnySpade()
+	assert.Nil(t, err)
+	assert.Equal(t, at, 0)
+	assert.Equal(t, card.House(), rung.Spade)
+}
+func TestPlayerHasAnyHeart(t *testing.T) {
+
+	p := rung.NewPlayer(rung.WestPlayer)
+	p.ReceiveCard(rung.NewCard(rung.Heart, rung.Ace))
+
+	card, at, err := p.AnyHeart()
+	assert.Nil(t, err)
+	assert.Equal(t, at, 0)
+	assert.Equal(t, card.House(), rung.Heart)
+}
+func TestPlayerHasAnyClub(t *testing.T) {
+
+	p := rung.NewPlayer(rung.WestPlayer)
+	p.ReceiveCard(rung.NewCard(rung.Club, rung.Ace))
+
+	card, at, err := p.AnyClub()
+	assert.Nil(t, err)
+	assert.Equal(t, at, 0)
+	assert.Equal(t, card.House(), rung.Club)
+}
+func TestPlayerHasAnyDiamond(t *testing.T) {
+
+	p := rung.NewPlayer(rung.WestPlayer)
+	p.ReceiveCard(rung.NewCard(rung.Diamond, rung.Ace))
+
+	card, at, err := p.AnyDiamond()
+	assert.Nil(t, err)
+	assert.Equal(t, at, 0)
+	assert.Equal(t, card.House(), rung.Diamond)
+}

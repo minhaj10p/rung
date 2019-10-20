@@ -147,7 +147,3 @@ func (d *deck) IsCardPresent(c Card) bool {
 		}
 	}
 }
-
-func isSameCard(c1 Card, c2 Card) bool {
-	return c1.House() == c2.House() && c1.Number() == c2.Number()
-}

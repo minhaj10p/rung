@@ -227,3 +227,97 @@ func TestCannotMakeTrumpAgainIfTrumpAlreadyDeclared(t *testing.T) {
 	assert.Equal(t, player.Name(), p2.Name())
 
 }
+
+func TestCardNotWithPlayerAddedInHand(t *testing.T) {
+	p := rung.NewPlayer(rung.SouthPlayer)
+	hand := rung.NewHand(nil)
+	err := hand.AddCard(p, 2)
+	assert.NotNil(t, err)
+}
+
+func TestCutByTrumpCard(t *testing.T) {
+
+	trump := rung.Diamond
+	hand := rung.NewHand(&trump)
+	p1 := rung.NewPlayer(rung.SouthPlayer)
+	p2 := rung.NewPlayer(rung.NorthPlayer)
+	p3 := rung.NewPlayer(rung.EastPlayer)
+	p4 := rung.NewPlayer(rung.WestPlayer)
+
+	c1 := rung.NewCard(rung.Spade, rung.Three)
+	c2 := rung.NewCard(rung.Spade, rung.King)
+	c3 := rung.NewCard(rung.Spade, rung.Queen)
+	c4 := rung.NewCard(rung.Diamond, rung.Two)
+
+	p1.ReceiveCard(c1)
+	p2.ReceiveCard(c2)
+	p3.ReceiveCard(c3)
+	p4.ReceiveCard(c4)
+
+	hand.AddCard(p1, rung.FirstCardAtHand)
+	hand.AddCard(p2, rung.FirstCardAtHand)
+	hand.AddCard(p3, rung.FirstCardAtHand)
+	hand.AddCard(p4, rung.FirstCardAtHand)
+
+	x, err := hand.Head()
+	assert.Nil(t, err)
+	assert.Equal(t, p4.Name(), x.Name())
+
+}
+
+func TestCutByBiggerTrumpCard(t *testing.T) {
+
+	trump := rung.Diamond
+	hand := rung.NewHand(&trump)
+	p1 := rung.NewPlayer(rung.SouthPlayer)
+	p2 := rung.NewPlayer(rung.NorthPlayer)
+	p3 := rung.NewPlayer(rung.EastPlayer)
+	p4 := rung.NewPlayer(rung.WestPlayer)
+
+	c1 := rung.NewCard(rung.Spade, rung.Three)
+	c2 := rung.NewCard(rung.Diamond, rung.Ace)
+	c3 := rung.NewCard(rung.Spade, rung.Queen)
+	c4 := rung.NewCard(rung.Diamond, rung.King)
+
+	p1.ReceiveCard(c1)
+	p2.ReceiveCard(c2)
+	p3.ReceiveCard(c3)
+	p4.ReceiveCard(c4)
+
+	hand.AddCard(p1, rung.FirstCardAtHand)
+	hand.AddCard(p2, rung.FirstCardAtHand)
+	hand.AddCard(p3, rung.FirstCardAtHand)
+	hand.AddCard(p4, rung.FirstCardAtHand)
+
+	x, err := hand.Head()
+	assert.Nil(t, err)
+	assert.Equal(t, p2.Name(), x.Name())
+
+}
+
+func TestSameCardsInOneHand(t *testing.T) {
+	hand := rung.NewHand(nil)
+	p1 := rung.NewPlayer(rung.SouthPlayer)
+	p2 := rung.NewPlayer(rung.WestPlayer)
+	c := rung.NewCard(rung.Spade, rung.Ace)
+	p1.ReceiveCard(c)
+	p2.ReceiveCard(c)
+
+	hand.AddCard(p1, rung.FirstCardAtHand)
+	err := hand.AddCard(p2, rung.FirstCardAtHand)
+	assert.Error(t, err)
+}
+
+func TestHandHasCard(t *testing.T) {
+	hand := rung.NewHand(nil)
+	has, index := hand.HasCard(rung.NewCard(rung.Spade, rung.Ace))
+	assert.False(t, has)
+	assert.Equal(t, -1, index)
+}
+
+func TestEmptyTrump(t *testing.T) {
+	hand := rung.NewHand(nil)
+	tr, err := hand.Trump()
+	assert.Empty(t, tr)
+	assert.Error(t, err)
+}

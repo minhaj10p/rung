@@ -20,6 +20,13 @@ const (
 	ThirteenthCardAtHand = iota
 )
 
+const (
+	SouthPlayer = "South Player"
+	EastPlayer  = "East Player"
+	WestPlayer  = "West Player"
+	NorthPlayer = "North Player"
+)
+
 //Player Player
 type Player interface {
 

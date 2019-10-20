@@ -138,3 +138,5 @@ func TestConsecutiveHeadsPlayerShouldWinHandsAtTable(t *testing.T) {
 	assert.Equal(t, 0, len(game.HandsOnGround()), "Hands on ground should be zero after player has won hand")
 	assert.Equal(t, 1, game.HandsWonBy(biggestPlayer), "Hands won be player should be 1")
 }
+
+//TEST Todo: throw a card from player that it doens't have. expect error

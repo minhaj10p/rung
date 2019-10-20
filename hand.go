@@ -59,12 +59,12 @@ func (h *hand) IsComplete() bool {
 }
 
 func (h *hand) HasCard(c Card) (bool, int) {
-	for cardAtIndex, card := range h.cards {
-		if isSameCard(c, card) {
-			return true, cardAtIndex
-		}
+	_, at, err := FindCardInCards(c, h.cards)
+	if err != nil {
+		return false, -1
 	}
-	return false, -1
+	return true, at
+
 }
 func (h *hand) HasAlreadyPlayed(pl Player) bool {
 
@@ -120,7 +120,7 @@ func (h *hand) isTrumpDeclared() bool {
 }
 
 func (h *hand) setHeadForBiggestCard(cards []Card, c Card, house string, pl Player) {
-	biggestCardAtHand := GetBiggestCard(h.cards, h.house)
+	biggestCardAtHand := GetBiggestCard(cards, house)
 	if c.Number() > biggestCardAtHand.Number() {
 		h.head = pl
 	}
@@ -172,6 +172,11 @@ func (h *hand) AddCard(pl Player, cardAtHandIndex int) error {
 		return nil
 	}
 	if c.House() == h.trump {
+		trumpCards := h.trumpCardsAtHand()
+		if len(trumpCards) == 0 {
+			h.head = pl
+			return nil
+		}
 		h.setHeadForBiggestCard(h.trumpCardsAtHand(), c, h.trump, pl)
 	}
 

@@ -137,3 +137,21 @@ func TestPlayerHasAnyDiamond(t *testing.T) {
 	assert.Equal(t, at, 0)
 	assert.Equal(t, card.House(), rung.Diamond)
 }
+
+func TestErrorOnPlayerReceivesFourteenCards(t *testing.T) {
+	player := rung.NewPlayer(rung.WestPlayer)
+	deck := rung.NewDeck()
+	cards, _ := deck.DrawCards(0, 13)
+	assert.Len(t, cards, 14)
+	for i := 0; i < 13; i++ {
+		player.ReceiveCard(cards[i])
+	}
+	assert.NotNil(t, player.ReceiveCard(cards[13]))
+}
+
+func TestTakeOutSpadeWhenPlayerDoesntHaveSpade(t *testing.T) {
+
+	player := rung.NewPlayer(rung.SouthPlayer)
+	_, _, err := player.AnySpade()
+	assert.NotNil(t, err)
+}

@@ -1,9 +1,5 @@
 package rung
 
-import (
-	"github.com/davecgh/go-spew/spew"
-)
-
 //Game a game of court piece
 type Game interface {
 	//Players returns the players
@@ -31,12 +27,6 @@ type game struct {
 	handsWon      map[string]int
 }
 
-const (
-	EastPlayer  = "East Player"
-	WestPlayer  = "West Player"
-	NorthPlayer = "North Player"
-	SouthPlayer = "South Player"
-)
 const (
 	FirstHandForClub = 0
 )
@@ -69,13 +59,9 @@ func (g *game) DistributeCards() error {
 	cards := len(g.deck.CardsInDeck())
 	playerTurn := 0
 	for i := cards - 1; i >= 0; i-- {
-		card, err := g.deck.DrawCard(i)
-		if err != nil {
-			return err
-		}
+		card, _ := g.deck.DrawCard(i)
 		g.players[playerTurn].ReceiveCard(card)
 		playerTurn++
-
 		if playerTurn == 4 {
 			playerTurn = 0
 		}
@@ -85,24 +71,8 @@ func (g *game) DistributeCards() error {
 	return nil
 }
 
-func (g *game) isFirstHand(turn int) bool {
+func isFirstHand(turn int) bool {
 	return turn == FirstHandForClub
-}
-
-func (g *game) isFirstCardTwoOfClubs(c Card) bool {
-	return c.House() == Club && c.Number() == Two
-}
-
-func (g *game) PlayerToStart() (Player, int) {
-
-	twoClub := NewCard(Club, Two)
-	for k, p := range g.players {
-		if has, _ := p.HasCard(twoClub); has {
-			return p, k
-		}
-	}
-	return nil, -1
-
 }
 
 type Move struct {
@@ -116,7 +86,7 @@ func (g *game) PlayHand(turn int, trump *string, lastHead Player) (Hand, error) 
 	cardsDelt := 0
 	handCh := make(chan Move, 4)
 
-	if turn == FirstHandForClub {
+	if isFirstHand(turn) {
 		for i, p := range g.players {
 			if has, cardAt := p.HasCard(NewCard(Club, Two)); has {
 				hand.AddCard(p, cardAt)
@@ -145,7 +115,7 @@ func (g *game) PlayHand(turn int, trump *string, lastHead Player) (Hand, error) 
 	}
 	g.handsOnGround = append(g.handsOnGround, hand)
 
-	if turn == FirstCardAtHand {
+	if isFirstHand(turn) {
 		return hand, nil
 	}
 
@@ -168,7 +138,5 @@ func (g *game) HandsOnGround() []Hand {
 }
 
 func (g *game) HandsWonBy(player Player) int {
-	spew.Dump(g.handsWon)
-	spew.Dump(player.Name())
 	return g.handsWon[player.Name()]
 }

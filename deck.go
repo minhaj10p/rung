@@ -53,8 +53,7 @@ func (d *deck) CardsInDeck() []Card {
 }
 
 func (d *deck) DrawCard(i int) (Card, error) {
-
-	if len(d.cardsInDeck) < i {
+	if i >= len(d.cardsInDeck) || i < 0 {
 		return nil, fmt.Errorf("not this many cards")
 	}
 	card := d.cardsInDeck[i]
@@ -66,7 +65,10 @@ func (d *deck) DrawCard(i int) (Card, error) {
 func (d *deck) DrawCards(m, n int) ([]Card, error) {
 
 	cardCount := len(d.CardsInDeck())
-	if cardCount < n || cardCount < m {
+	if n < m {
+		return nil, fmt.Errorf("invalid query for card selection")
+	}
+	if cardCount < m || n > cardCount {
 		return nil, fmt.Errorf("card index not present in deck")
 	}
 
@@ -86,11 +88,7 @@ func (d *deck) Shuffle(n int) error {
 		if err != nil {
 			return fmt.Errorf("error shuffling cards: %v", err)
 		}
-		err = d.PutCards(cards)
-		if err != nil {
-			return err
-		}
-
+		d.PutCards(cards)
 	}
 	return nil
 }

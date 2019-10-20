@@ -87,3 +87,40 @@ func TestAfterShufflingDeck(t *testing.T) {
 	assert.Equal(t, len(deck.CardsInDeck()), 52)
 
 }
+
+func TestDrawCardNotPresentInDeck(t *testing.T) {
+
+	deck := rung.NewDeck()
+	_, err := deck.DrawCard(52)
+	assert.Error(t, err)
+}
+
+func TestDrawMoreCardsThenInDeck(t *testing.T) {
+	deck := rung.NewDeck()
+	_, err := deck.DrawCards(0, 53)
+	assert.Error(t, err)
+}
+
+//test create deck, draw 50 cards, then shuffle. expect error
+func TestDrawCardAndShuffle(t *testing.T) {
+	deck := rung.NewDeck()
+	deck.DrawCards(0, 51)
+	assert.Error(t, deck.Shuffle(5))
+}
+
+func TestPutCardAlreadyPresent(t *testing.T) {
+	deck := rung.NewDeck()
+	err := deck.PutCard(rung.NewCard(rung.Spade, rung.Ace))
+	assert.Error(t, err)
+}
+func TestPutMultipleCardAlreadyPresent(t *testing.T) {
+	deck := rung.NewDeck()
+	cards := []rung.Card{rung.NewCard(rung.Spade, rung.Ace)}
+	err := deck.PutCards(cards)
+	assert.Error(t, err)
+}
+func TestInvalidGetQueryCard(t *testing.T) {
+	deck := rung.NewDeck()
+	_, err := deck.DrawCards(2, 1)
+	assert.Error(t, err)
+}

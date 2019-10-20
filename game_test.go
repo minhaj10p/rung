@@ -138,3 +138,4 @@ func TestConsecutiveHeadsPlayerShouldWinHandsAtTable(t *testing.T) {
 }
 
 //TEST Todo: throw a card from player that it doens't have. expect error
+//TEST todo: create invalid player in the game and call next

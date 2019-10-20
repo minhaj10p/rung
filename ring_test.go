@@ -20,7 +20,7 @@ func beforeEach(numberOfPlayers int) (rung.Ring, error) {
 
 }
 
-func TestRingHasFourPlayers(t *testing.T) {
+func TestRing_HasFourPlayers(t *testing.T) {
 	ring, err := beforeEach(defaultPlayersNo)
 	assert.Nil(t, err)
 	assert.Equal(t, 4, len(ring.Players()))

@@ -7,7 +7,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestCardShouldHaveValidNumberAndHouse(t *testing.T) {
+func TestCard_ShouldHaveValidNumberAndHouse(t *testing.T) {
 
 	house := "Spades"
 	cardNumber := 1

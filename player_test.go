@@ -7,17 +7,17 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestNewPlayerHasIdentity(t *testing.T) {
+func TestPlayer_NewPlayerHasIdentity(t *testing.T) {
 	player := rung.NewPlayer(rung.SouthPlayer)
 	assert.Equal(t, player.Name(), rung.SouthPlayer)
 }
-func TestNewPlayerHasZeroCards(t *testing.T) {
+func TestPlayer_NewPlayerHasZeroCards(t *testing.T) {
 
 	player := rung.NewPlayer(rung.SouthPlayer)
 	assert.Equal(t, len(player.CardsAtHand()), 0)
 }
 
-func TestReceiveCardFromDeck(t *testing.T) {
+func TestPlayer_ReceiveCardFromDeck(t *testing.T) {
 	deck := rung.NewDeck()
 	card, err := deck.DrawCard(0)
 	assert.Nil(t, err)
@@ -28,13 +28,13 @@ func TestReceiveCardFromDeck(t *testing.T) {
 	assert.Equal(t, len(player.CardsAtHand()), 1)
 }
 
-func TestThrowErrorOnDrawingCardNotAtHand(t *testing.T) {
+func TestPlayer_ThrowErrorOnDrawingCardNotAtHand(t *testing.T) {
 	player := rung.NewPlayer(rung.SouthPlayer)
 	_, err := player.DrawCard(15)
 	assert.NotNil(t, err)
 }
 
-func TestCannotReceiveCardAlreadyAtHand(t *testing.T) {
+func TestPlayer_CannotReceiveCardAlreadyAtHand(t *testing.T) {
 	player := rung.NewPlayer(rung.SouthPlayer)
 	c1 := rung.NewCard(rung.Spade, rung.Ace)
 	err := player.ReceiveCard(c1)
@@ -44,7 +44,7 @@ func TestCannotReceiveCardAlreadyAtHand(t *testing.T) {
 
 }
 
-func TestIfPlayerHasCardOfGivenHouse(t *testing.T) {
+func TestPlayer_IfPlayerHasCardOfGivenHouse(t *testing.T) {
 
 	player := rung.NewPlayer(rung.SouthPlayer)
 	c1 := rung.NewCard(rung.Spade, rung.Ace)
@@ -65,7 +65,7 @@ func TestIfPlayerHasCardOfGivenHouse(t *testing.T) {
 
 }
 
-func TestPlayerInput(t *testing.T) {
+func TestPlayer_ThrowCardAndReceiveCardOnTable(t *testing.T) {
 
 	p1 := rung.NewPlayer(rung.SouthPlayer)
 	p2 := rung.NewPlayer(rung.WestPlayer)
@@ -97,7 +97,7 @@ func TestPlayerInput(t *testing.T) {
 	assert.Equal(t, count, 20)
 }
 
-func TestPlayerHasAnySpade(t *testing.T) {
+func TestPlayer_HasAnySpade(t *testing.T) {
 
 	p := rung.NewPlayer(rung.WestPlayer)
 	p.ReceiveCard(rung.NewCard(rung.Spade, rung.Ace))
@@ -107,7 +107,7 @@ func TestPlayerHasAnySpade(t *testing.T) {
 	assert.Equal(t, at, 0)
 	assert.Equal(t, card.House(), rung.Spade)
 }
-func TestPlayerHasAnyHeart(t *testing.T) {
+func TestPlayer_HasAnyHeart(t *testing.T) {
 
 	p := rung.NewPlayer(rung.WestPlayer)
 	p.ReceiveCard(rung.NewCard(rung.Heart, rung.Ace))
@@ -117,7 +117,7 @@ func TestPlayerHasAnyHeart(t *testing.T) {
 	assert.Equal(t, at, 0)
 	assert.Equal(t, card.House(), rung.Heart)
 }
-func TestPlayerHasAnyClub(t *testing.T) {
+func TestPlayer_HasAnyClub(t *testing.T) {
 
 	p := rung.NewPlayer(rung.WestPlayer)
 	p.ReceiveCard(rung.NewCard(rung.Club, rung.Ace))
@@ -127,7 +127,7 @@ func TestPlayerHasAnyClub(t *testing.T) {
 	assert.Equal(t, at, 0)
 	assert.Equal(t, card.House(), rung.Club)
 }
-func TestPlayerHasAnyDiamond(t *testing.T) {
+func TestPlayer_HasAnyDiamond(t *testing.T) {
 
 	p := rung.NewPlayer(rung.WestPlayer)
 	p.ReceiveCard(rung.NewCard(rung.Diamond, rung.Ace))
@@ -138,7 +138,7 @@ func TestPlayerHasAnyDiamond(t *testing.T) {
 	assert.Equal(t, card.House(), rung.Diamond)
 }
 
-func TestErrorOnPlayerReceivesFourteenCards(t *testing.T) {
+func TestPlayer_ErrorOnPlayerReceivesFourteenCards(t *testing.T) {
 	player := rung.NewPlayer(rung.WestPlayer)
 	deck := rung.NewDeck()
 	cards, _ := deck.DrawCards(0, 13)
@@ -149,7 +149,7 @@ func TestErrorOnPlayerReceivesFourteenCards(t *testing.T) {
 	assert.NotNil(t, player.ReceiveCard(cards[13]))
 }
 
-func TestTakeOutSpadeWhenPlayerDoesntHaveSpade(t *testing.T) {
+func TestPlayer_TakeOutSpadeWhenPlayerDoesntHaveSpade(t *testing.T) {
 
 	player := rung.NewPlayer(rung.SouthPlayer)
 	_, _, err := player.AnySpade()

@@ -7,13 +7,13 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestDeckShouldHaveFiftyTwoCards(t *testing.T) {
+func TestDeck_ShouldHaveFiftyTwoCards(t *testing.T) {
 
 	deck := rung.NewDeck()
 	assert.Equal(t, len(deck.CardsInDeck()), 52)
 }
 
-func TestNewDeckHasFourOfSpades(t *testing.T) {
+func TestDeck_HasFourOfSpades(t *testing.T) {
 
 	deck := rung.NewDeck()
 	found := true
@@ -25,14 +25,14 @@ func TestNewDeckHasFourOfSpades(t *testing.T) {
 	assert.True(t, found)
 }
 
-func TestIsCardPresentInDeck(t *testing.T) {
+func TestDeck_IsCardPresentInDeck(t *testing.T) {
 
 	deck := rung.NewDeck()
 	card := rung.NewCard(rung.Spade, rung.Ace)
 	assert.True(t, deck.IsCardPresent(card))
 
 }
-func TestIsCardNotPresentInDeck(t *testing.T) {
+func TestDeck_IsCardNotPresentInDeck(t *testing.T) {
 
 	deck := rung.NewDeck()
 	card, err := deck.DrawCard(0)
@@ -40,7 +40,7 @@ func TestIsCardNotPresentInDeck(t *testing.T) {
 	assert.False(t, deck.IsCardPresent(card))
 }
 
-func TestAfterDrawingCardFromDeck(t *testing.T) {
+func TestDeck_AfterDrawingCardFromDeck(t *testing.T) {
 
 	deck := rung.NewDeck()
 	card, err := deck.DrawCard(0)
@@ -50,7 +50,7 @@ func TestAfterDrawingCardFromDeck(t *testing.T) {
 
 }
 
-func TestDrawCards(t *testing.T) {
+func TestDeck_DrawCards(t *testing.T) {
 	deck := rung.NewDeck()
 	cards, err := deck.DrawCards(0, 2)
 	assert.Nil(t, err)
@@ -60,7 +60,7 @@ func TestDrawCards(t *testing.T) {
 
 }
 
-func TestPutCard(t *testing.T) {
+func TestDeck_PutCard(t *testing.T) {
 
 	deck := rung.NewDeck()
 	card, err := deck.DrawCard(0)
@@ -69,7 +69,7 @@ func TestPutCard(t *testing.T) {
 	assert.Equal(t, len(deck.CardsInDeck()), 52)
 }
 
-func TestPutCards(t *testing.T) {
+func TestDeck_PutCards(t *testing.T) {
 
 	deck := rung.NewDeck()
 	cards, err := deck.DrawCards(0, 1)
@@ -79,7 +79,7 @@ func TestPutCards(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, len(deck.CardsInDeck()), 52)
 }
-func TestAfterShufflingDeck(t *testing.T) {
+func TestDeck_AfterShufflingDeck(t *testing.T) {
 
 	deck := rung.NewDeck()
 	err := deck.Shuffle(30)
@@ -88,38 +88,37 @@ func TestAfterShufflingDeck(t *testing.T) {
 
 }
 
-func TestDrawCardNotPresentInDeck(t *testing.T) {
+func TestDeck_DrawCardNotPresentInDeck(t *testing.T) {
 
 	deck := rung.NewDeck()
 	_, err := deck.DrawCard(52)
 	assert.Error(t, err)
 }
 
-func TestDrawMoreCardsThenInDeck(t *testing.T) {
+func TestDeck_DrawMoreCardsThenInDeck(t *testing.T) {
 	deck := rung.NewDeck()
 	_, err := deck.DrawCards(0, 53)
 	assert.Error(t, err)
 }
 
-//test create deck, draw 50 cards, then shuffle. expect error
-func TestDrawCardAndShuffle(t *testing.T) {
+func TestDeck_DrawCardAndShuffle(t *testing.T) {
 	deck := rung.NewDeck()
 	deck.DrawCards(0, 51)
 	assert.Error(t, deck.Shuffle(5))
 }
 
-func TestPutCardAlreadyPresent(t *testing.T) {
+func TestDeck_PutCardAlreadyPresent(t *testing.T) {
 	deck := rung.NewDeck()
 	err := deck.PutCard(rung.NewCard(rung.Spade, rung.Ace))
 	assert.Error(t, err)
 }
-func TestPutMultipleCardAlreadyPresent(t *testing.T) {
+func TestDeck_PutMultipleCardAlreadyPresent(t *testing.T) {
 	deck := rung.NewDeck()
 	cards := []rung.Card{rung.NewCard(rung.Spade, rung.Ace)}
 	err := deck.PutCards(cards)
 	assert.Error(t, err)
 }
-func TestInvalidGetQueryCard(t *testing.T) {
+func TestDeck_InvalidGetQueryCard(t *testing.T) {
 	deck := rung.NewDeck()
 	_, err := deck.DrawCards(2, 1)
 	assert.Error(t, err)

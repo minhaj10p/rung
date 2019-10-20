@@ -8,13 +8,13 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestGameHasFourPlayers(t *testing.T) {
+func TestGame_HasFourPlayers(t *testing.T) {
 
 	game := rung.NewGame()
 	assert.Equal(t, len(game.Players()), 4)
 }
 
-func TestEachPlayerHasZeroCardsBeforeDistribution(t *testing.T) {
+func TestGame_EachPlayerHasZeroCardsBeforeDistribution(t *testing.T) {
 
 	game := rung.NewGame()
 	players := game.Players()
@@ -25,7 +25,7 @@ func TestEachPlayerHasZeroCardsBeforeDistribution(t *testing.T) {
 
 }
 
-func TestEachPlayerHasThirteenCardsAfterDistribution(t *testing.T) {
+func TestGame_EachPlayerHasThirteenCardsAfterDistribution(t *testing.T) {
 	game := rung.NewGame()
 	err := game.DistributeCards()
 	assert.Nil(t, err)
@@ -36,7 +36,7 @@ func TestEachPlayerHasThirteenCardsAfterDistribution(t *testing.T) {
 
 }
 
-func TestNoTwoPlayersHaveSameCard(t *testing.T) {
+func TestGame_NoTwoPlayersHaveSameCard(t *testing.T) {
 
 	game := rung.NewGame()
 	err := game.DistributeCards()
@@ -59,7 +59,7 @@ func TestNoTwoPlayersHaveSameCard(t *testing.T) {
 
 }
 
-func TestFirstHandMustHaveFourCards(t *testing.T) {
+func TestGame_FirstHandMustHaveFourCards(t *testing.T) {
 	game := rung.NewGame()
 	game.ShuffleDeck(20)
 	assert.Nil(t, game.DistributeCards())
@@ -79,7 +79,7 @@ func TestFirstHandMustHaveFourCards(t *testing.T) {
 	assert.Equal(t, len(handOutCome.Cards()), 4)
 }
 
-func TestFirstHandMustHaveTwoOfClubs(t *testing.T) {
+func TestGame_FirstHandMustHaveTwoOfClubs(t *testing.T) {
 
 	game := rung.NewGame()
 	game.ShuffleDeck(1)
@@ -108,7 +108,7 @@ func TestFirstHandMustHaveTwoOfClubs(t *testing.T) {
 	assert.True(t, has)
 }
 
-func TestConsecutiveHeadsPlayerShouldWinHandsAtTable(t *testing.T) {
+func TestGame_ConsecutiveHeadsPlayerShouldWinHandsAtTable(t *testing.T) {
 	game := rung.NewGame()
 	game.ShuffleDeck(20)
 	game.DistributeCards()

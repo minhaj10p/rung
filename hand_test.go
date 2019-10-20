@@ -7,18 +7,18 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestEmptyHandShouldHaveZeroCards(t *testing.T) {
+func TestHand_EmptyHandShouldHaveZeroCards(t *testing.T) {
 
 	hand := rung.NewHand(nil)
 	assert.Equal(t, len(hand.Cards()), 0)
 }
 
-func TestEmptyHandShouldHaveNoHouse(t *testing.T) {
+func TestHand_EmptyHandShouldHaveNoHouse(t *testing.T) {
 	hand := rung.NewHand(nil)
 	_, err := hand.House()
 	assert.NotNil(t, err)
 }
-func TestAddCardToHand(t *testing.T) {
+func TestHand_AddCardToHand(t *testing.T) {
 
 	hand := rung.NewHand(nil)
 	player := rung.NewPlayer(rung.SouthPlayer)
@@ -29,7 +29,7 @@ func TestAddCardToHand(t *testing.T) {
 	assert.Equal(t, len(hand.Cards()), 1)
 }
 
-func TestNoSamePlayerCanAddToHand(t *testing.T) {
+func TestHand_NoSamePlayerCanAddToHand(t *testing.T) {
 
 	hand := rung.NewHand(nil)
 	p1 := rung.NewPlayer(rung.EastPlayer)
@@ -46,7 +46,7 @@ func TestNoSamePlayerCanAddToHand(t *testing.T) {
 	assert.NotNil(t, err)
 }
 
-func TestNoMoreThanFourCardsAtOneHand(t *testing.T) {
+func TestHand_NoMoreThanFourCardsAtOneHand(t *testing.T) {
 
 	hand := rung.NewHand(nil)
 	player1 := rung.NewPlayer(rung.SouthPlayer)
@@ -88,7 +88,7 @@ func TestNoMoreThanFourCardsAtOneHand(t *testing.T) {
 
 }
 
-func TestEmptyHandShouldHaveNoHead(t *testing.T) {
+func TestHand_EmptyHandShouldHaveNoHead(t *testing.T) {
 
 	hand := rung.NewHand(nil)
 	headPlayer, err := hand.Head()
@@ -96,7 +96,7 @@ func TestEmptyHandShouldHaveNoHead(t *testing.T) {
 	assert.NotNil(t, err)
 }
 
-func TestColorOfHandShouldBeOfTheFirstCardPlacedOnHand(t *testing.T) {
+func TestHand_ColorOfHandShouldBeOfTheFirstCardPlacedOnHand(t *testing.T) {
 
 	hand := rung.NewHand(nil)
 	p1 := rung.NewPlayer(rung.WestPlayer)
@@ -110,7 +110,7 @@ func TestColorOfHandShouldBeOfTheFirstCardPlacedOnHand(t *testing.T) {
 	assert.Equal(t, houseOfHand, c1.House())
 }
 
-func TestHeadShouldBeOfTheMostPowerfullCardAtHand(t *testing.T) {
+func TestHand_HeadShouldBeOfTheMostPowerfullCardAtHand(t *testing.T) {
 
 	hand := rung.NewHand(nil)
 	p1 := rung.NewPlayer(rung.SouthPlayer)
@@ -139,7 +139,7 @@ func TestHeadShouldBeOfTheMostPowerfullCardAtHand(t *testing.T) {
 
 }
 
-func TestPlayerCannotPlayCard_OfDifferentHouseThanHouseOfHand(t *testing.T) {
+func TestHand_PlayerCannotPlayCard_OfDifferentHouseThanHouseOfHand(t *testing.T) {
 
 	hand := rung.NewHand(nil)
 	p1 := rung.NewPlayer(rung.SouthPlayer)
@@ -165,7 +165,7 @@ func TestPlayerCannotPlayCard_OfDifferentHouseThanHouseOfHand(t *testing.T) {
 
 }
 
-func TestPlayerCanMakeTrump(t *testing.T) {
+func TestHand_PlayerCanMakeTrump(t *testing.T) {
 
 	hand := rung.NewHand(nil)
 	p1 := rung.NewPlayer(rung.SouthPlayer)
@@ -195,7 +195,7 @@ func TestPlayerCanMakeTrump(t *testing.T) {
 
 }
 
-func TestCannotMakeTrumpAgainIfTrumpAlreadyDeclared(t *testing.T) {
+func TestHand_CannotMakeTrumpAgainIfTrumpAlreadyDeclared(t *testing.T) {
 
 	trump := rung.Spade
 	hand := rung.NewHand(&trump)
@@ -228,14 +228,14 @@ func TestCannotMakeTrumpAgainIfTrumpAlreadyDeclared(t *testing.T) {
 
 }
 
-func TestCardNotWithPlayerAddedInHand(t *testing.T) {
+func TestHand_CardNotWithPlayerAddedInHand(t *testing.T) {
 	p := rung.NewPlayer(rung.SouthPlayer)
 	hand := rung.NewHand(nil)
 	err := hand.AddCard(p, 2)
 	assert.NotNil(t, err)
 }
 
-func TestCutByTrumpCard(t *testing.T) {
+func TestHand_CutByTrumpCard(t *testing.T) {
 
 	trump := rung.Diamond
 	hand := rung.NewHand(&trump)
@@ -265,7 +265,7 @@ func TestCutByTrumpCard(t *testing.T) {
 
 }
 
-func TestCutByBiggerTrumpCard(t *testing.T) {
+func TestHand_CutByBiggerTrumpCard(t *testing.T) {
 
 	trump := rung.Diamond
 	hand := rung.NewHand(&trump)
@@ -295,7 +295,7 @@ func TestCutByBiggerTrumpCard(t *testing.T) {
 
 }
 
-func TestSameCardsInOneHand(t *testing.T) {
+func TestHand_SameCardsInOneHand(t *testing.T) {
 	hand := rung.NewHand(nil)
 	p1 := rung.NewPlayer(rung.SouthPlayer)
 	p2 := rung.NewPlayer(rung.WestPlayer)
@@ -308,14 +308,14 @@ func TestSameCardsInOneHand(t *testing.T) {
 	assert.Error(t, err)
 }
 
-func TestHandHasCard(t *testing.T) {
+func TestHand_HandHasCard(t *testing.T) {
 	hand := rung.NewHand(nil)
 	has, index := hand.HasCard(rung.NewCard(rung.Spade, rung.Ace))
 	assert.False(t, has)
 	assert.Equal(t, -1, index)
 }
 
-func TestEmptyTrump(t *testing.T) {
+func TestHand_EmptyTrump(t *testing.T) {
 	hand := rung.NewHand(nil)
 	tr, err := hand.Trump()
 	assert.Empty(t, tr)

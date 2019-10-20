@@ -11,11 +11,12 @@ var defaultPlayersNo = 4
 
 func beforeEach(numberOfPlayers int) (rung.Ring, error) {
 	playerNames := []string{rung.NorthPlayer, rung.EastPlayer, rung.SouthPlayer, rung.WestPlayer}
-	var players []rung.Player
+	var players []rung.RingPlayer
 	for i := 0; i < numberOfPlayers; i++ {
-		players = append(players, rung.NewPlayer(playerNames[i]))
+		pl := rung.NewPlayer(playerNames[i]).(rung.RingPlayer)
+		players = append(players, pl)
 	}
-	return rung.NewRing(players)
+	return rung.NewRing(players...)
 
 }
 
@@ -25,7 +26,7 @@ func TestRingHasFourPlayers(t *testing.T) {
 	assert.Equal(t, 4, len(ring.Players()))
 }
 
-func TestNext_AfterSouthPlayerNextPlayerIsWest(t *testing.T) {
+func TestRing_NextAfterSouthPlayerNextPlayerIsWest(t *testing.T) {
 
 	ring, err := beforeEach(defaultPlayersNo)
 	assert.Nil(t, err)
@@ -49,26 +50,26 @@ func TestNext_AfterSouthPlayerNextPlayerIsWest(t *testing.T) {
 
 }
 
-func TestIsCurrentPlayerSetInRing(t *testing.T) {
+func TestRing_IsCurrentPlayerSetInRing(t *testing.T) {
 	ring, err := beforeEach(defaultPlayersNo)
 	assert.Nil(t, err)
 	assert.False(t, false, ring.HasCurrentPlayer())
 
 }
 
-func TestNextWithoutSettingCurrentShouldError(t *testing.T) {
+func TestRing_NextWithoutSettingCurrentShouldError(t *testing.T) {
 	r, err := beforeEach(defaultPlayersNo)
 	assert.Nil(t, err)
 	_, err = r.Next()
 	assert.Error(t, err)
 }
 
-func TestCreateRingWithThreePlayers(t *testing.T) {
+func TestRing_CreateRingWithThreePlayers(t *testing.T) {
 	_, err := beforeEach(3)
 	assert.Error(t, err)
 }
 
-func TestGetAndSetPlayers(t *testing.T) {
+func TestRing_GetAndSetPlayers(t *testing.T) {
 	r, err := beforeEach(defaultPlayersNo)
 	assert.Nil(t, err)
 	players := r.Players()
@@ -77,19 +78,3 @@ func TestGetAndSetPlayers(t *testing.T) {
 	r.SetCurrentPlayer(p1)
 	assert.Equal(t, p1.Name(), r.GetCurrentPlayer().Name())
 }
-
-func TestWithInvalidPlayer(t *testing.T) {
-	playerNames := []string{"some", "guy", "i", "dk"}
-	var players []rung.Player
-	for i := 0; i < len(playerNames); i++ {
-		players = append(players, rung.NewPlayer(playerNames[i]))
-	}
-	r, err := rung.NewRing(players)
-	assert.Nil(t, err)
-	r.SetCurrentPlayer(players[0])
-	_, err = r.Next()
-	assert.Error(t, err)
-
-}
-
-//TODO:: test with player name not in ring map. expect error

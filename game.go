@@ -41,7 +41,7 @@ func NewGame() Game {
 		players = append(players, NewPlayer(playerNames[i]))
 	}
 	deck := NewDeck()
-	r, _ := NewRing(players)
+	r, _ := NewRing(players[0], players[1], players[2], players[3])
 
 	return &game{
 		ring:     r,
@@ -101,7 +101,8 @@ func (g *game) PlayHand(turn int, trump *string, lastHead Player) (Hand, error) 
 	}
 
 	for i := 0; i < 4-cardsDelt; i++ {
-		player, err := g.ring.Next()
+		rp, err := g.ring.Next()
+		player := (rp).(Player)
 		if err != nil {
 			return nil, err
 		}

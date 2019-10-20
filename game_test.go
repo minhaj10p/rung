@@ -134,6 +134,7 @@ func TestConsecutiveHeadsPlayerShouldWinHandsAtTable(t *testing.T) {
 	assert.Nil(t, err)
 	player, err := hand.Head()
 	assert.Nil(t, err)
-	assert.Equal(t, player.Name(), player.Name())
-	assert.Equal(t, len(game.HandsOnGround()), 0)
+	assert.Equal(t, player.Name(), biggestPlayer.Name())
+	assert.Equal(t, 0, len(game.HandsOnGround()), "Hands on ground should be zero after player has won hand")
+	assert.Equal(t, 1, game.HandsWonBy(biggestPlayer), "Hands won be player should be 1")
 }

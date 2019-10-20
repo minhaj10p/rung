@@ -65,6 +65,7 @@ type player struct {
 	name        string
 	//TODO:: come up with a better name for the queue
 	decisionChannel chan int
+	handsWon        []Hand
 }
 
 //NewPlayer NewPlayer

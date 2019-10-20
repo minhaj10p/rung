@@ -1,7 +1,7 @@
 package rung
 
 import (
-	"sync"
+	"github.com/davecgh/go-spew/spew"
 )
 
 //Game a game of court piece
@@ -19,12 +19,16 @@ type Game interface {
 
 	//HandsOnGround returns the hands on ground that are not won yet.
 	HandsOnGround() []Hand
+
+	//HandsWonBy returns the number of hands won by a player
+	HandsWonBy(player Player) int
 }
 
 type game struct {
-	m       *sync.Mutex
-	players []Player
-	deck    Deck
+	players       []Player
+	deck          Deck
+	handsOnGround []Hand
+	handsWon      map[string]int
 }
 
 const (
@@ -46,7 +50,11 @@ func NewGame() Game {
 		players = append(players, NewPlayer(playerNames[i]))
 	}
 	deck := NewDeck()
-	return &game{players: players, deck: deck, m: &sync.Mutex{}}
+	return &game{
+		players:  players,
+		deck:     deck,
+		handsWon: make(map[string]int, 4),
+	}
 }
 
 func (g *game) Players() []Player {
@@ -135,11 +143,32 @@ func (g *game) PlayHand(turn int, trump *string, lastHead Player) (Hand, error) 
 			cardsDelt++
 		}
 	}
+	g.handsOnGround = append(g.handsOnGround, hand)
+
+	if turn == FirstCardAtHand {
+		return hand, nil
+	}
+
+	head, err := hand.Head()
+	if err != nil {
+		return nil, err
+	}
+
+	if head.Name() == lastHead.Name() {
+		g.handsWon[lastHead.Name()] = len(g.handsOnGround)
+		g.handsOnGround = nil
+
+	}
 	return hand, nil
 
 }
 
 func (g *game) HandsOnGround() []Hand {
+	return g.handsOnGround
+}
 
-	return nil
+func (g *game) HandsWonBy(player Player) int {
+	spew.Dump(g.handsWon)
+	spew.Dump(player.Name())
+	return g.handsWon[player.Name()]
 }

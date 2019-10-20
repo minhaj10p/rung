@@ -4,13 +4,6 @@ import (
 	"fmt"
 )
 
-const (
-	PlayerOne   = iota
-	PlayerTwo   = iota
-	PlayerThree = iota
-	PlayerFour  = iota
-)
-
 var TurnPlaySequence = map[string]string{
 	SouthPlayer: WestPlayer,
 	WestPlayer:  NorthPlayer,
@@ -28,13 +21,16 @@ type Ring interface {
 	// Players returns
 	Players() []Player
 	//Next returns player to play next
-	Next() Player
+	Next() (Player, error)
 
 	//SetCurrentPlayer sets current player in the ring
 	SetCurrentPlayer(player Player)
 
 	//GetCurrentPlayer gets current player in the ring
 	GetCurrentPlayer() (player Player)
+
+	//HasCurrentPlayer return whether current player is set for the ring
+	HasCurrentPlayer() bool
 }
 
 //NewRing creates a new ring of four card players
@@ -43,8 +39,7 @@ func NewRing(players []Player) (Ring, error) {
 		return nil, fmt.Errorf("Ring must contain four players")
 	}
 	r := &ring{
-		players:       players,
-		currentPlayer: players[0],
+		players: players,
 	}
 	return r, nil
 }
@@ -53,15 +48,19 @@ func (r *ring) Players() []Player {
 	return r.players
 }
 
-func (r *ring) Next() Player {
+func (r *ring) Next() (Player, error) {
 
+	if r.currentPlayer == nil {
+		return nil, fmt.Errorf("configuration error, please call SetCurrentPlayer first")
+	}
 	name := r.currentPlayer.Name()
 	for _, p := range r.Players() {
 		if p.Name() == TurnPlaySequence[name] {
-			return p
+			r.SetCurrentPlayer(p)
+			return p, nil
 		}
 	}
-	return nil
+	return nil, fmt.Errorf("player not found")
 }
 
 func (r *ring) SetCurrentPlayer(p Player) {
@@ -69,4 +68,8 @@ func (r *ring) SetCurrentPlayer(p Player) {
 }
 func (r *ring) GetCurrentPlayer() Player {
 	return r.currentPlayer
+}
+
+func (r *ring) HasCurrentPlayer() bool {
+	return r.currentPlayer != nil
 }

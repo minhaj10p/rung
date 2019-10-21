@@ -138,5 +138,31 @@ func TestGame_ConsecutiveHeadsPlayerShouldWinHandsAtTable(t *testing.T) {
 	assert.Equal(t, 1, game.HandsWonBy(biggestPlayer), "Hands won be player should be 1")
 }
 
+func TestTwelvthHandShouldNotAddWinToAnyPlayer(t *testing.T) {
+
+	game := rung.NewGame()
+	game.ShuffleDeck(20)
+	game.DistributeCards()
+
+	trump := pattay.Spade
+	biggestPlayerCard, aceAt := dataset.PlayerWithAceOfSpade(game)
+	assert.NotEqual(t, -1, aceAt)
+	others := dataset.PlayersWithoutAceOfSpade(game)
+
+	biggestPlayerCard.ThrowCard(aceAt)
+	for _, px := range others {
+		for j, c := range px.CardsAtHand() {
+			if c.House() == pattay.Spade {
+				px.ThrowCard(j)
+			}
+		}
+	}
+	_, err := game.PlayHand(11, &trump, biggestPlayerCard)
+	assert.Equal(t, 0, game.HandsWonBy(biggestPlayerCard))
+
+	assert.Nil(t, err)
+
+}
+
 //TEST Todo: throw a card from player that it doens't have. expect error
 //TEST todo: create invalid player in the game and call next

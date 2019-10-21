@@ -19,6 +19,7 @@ func PlayerWithTwoOfClubs(g rung.Game) (rung.Player, int) {
 	return nil, -1
 
 }
+
 func PLayersWithoutTwoOfClubs(g rung.Game) []rung.Player {
 
 	twoClub := pattay.NewCard(pattay.Club, pattay.Two)
@@ -30,5 +31,37 @@ func PLayersWithoutTwoOfClubs(g rung.Game) []rung.Player {
 		}
 	}
 	return without2Clubs
+
+}
+
+//PlayerWithAceOfSpade PlayerWithAceOfSpade
+func PlayerWithAceOfSpade(g rung.Game) (rung.Player, int) {
+	aceOfSpade := pattay.NewCard(pattay.Spade, pattay.Ace)
+	return PlayerWithCard(g, aceOfSpade)
+}
+
+//PlayersWithoutAceOfSpade PlayersWithoutAceOfSpade
+func PlayersWithoutAceOfSpade(g rung.Game) []rung.Player {
+	twoClub := pattay.NewCard(pattay.Spade, pattay.Ace)
+	return PlayersWithoutCard(g, twoClub)
+}
+
+func PlayerWithCard(g rung.Game, card pattay.Card) (rung.Player, int) {
+	for _, p := range g.Players() {
+		if has, at := p.HasCard(card); has {
+			return p, at
+		}
+	}
+	return nil, -1
+}
+
+func PlayersWithoutCard(g rung.Game, card pattay.Card) []rung.Player {
+	var without []rung.Player
+	for _, p := range g.Players() {
+		if hasCard, _ := p.HasCard(card); !hasCard {
+			without = append(without, p)
+		}
+	}
+	return without
 
 }

@@ -1,6 +1,8 @@
 package rung
 
-import "github.com/minhajuddinkhan/pattay"
+import (
+	"github.com/minhajuddinkhan/pattay"
+)
 
 //Game a game of court piece
 type Game interface {
@@ -32,6 +34,7 @@ type game struct {
 
 const (
 	FirstHandForClub = 0
+	SecondLastHand   = 11
 )
 
 //NewGame NewGame
@@ -86,6 +89,18 @@ func (g *game) DistributeCards() error {
 func isFirstHand(turn int) bool {
 	return turn == FirstHandForClub
 }
+func isSecondLastHand(turn int) bool {
+	return turn == SecondLastHand
+}
+func canWinHand(turn int) bool {
+	if isFirstHand(turn) {
+		return false
+	}
+	if isSecondLastHand(turn) {
+		return false
+	}
+	return true
+}
 
 func (g *game) PlayHand(turn int, trump *string, lastHead Player) (Hand, error) {
 
@@ -124,21 +139,19 @@ func (g *game) PlayHand(turn int, trump *string, lastHead Player) (Hand, error) 
 	}
 
 	g.handsOnGround = append(g.handsOnGround, hand)
-
-	if isFirstHand(turn) {
-		return hand, nil
-	}
-
 	head, err := hand.Head()
 	if err != nil {
 		return nil, err
 	}
 	g.ring.SetCurrentPlayer(head)
 
+	if !canWinHand(turn) {
+		return hand, nil
+	}
+
 	if head.Name() == lastHead.Name() {
 		g.handsWon[lastHead.Name()] = len(g.handsOnGround)
 		g.handsOnGround = nil
-
 	}
 	return hand, nil
 

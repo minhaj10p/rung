@@ -116,7 +116,7 @@ func TestGame_ConsecutiveHeadsPlayerShouldWinHandsAtTable(t *testing.T) {
 	trump := pattay.Spade
 	players := game.Players()
 
-	var biggestPlayer rung.Player
+	var biggestPlayer pattay.Player
 
 	var spades []pattay.Card
 	for _, x := range players {

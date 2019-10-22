@@ -7,12 +7,12 @@ import (
 //Game a game of court piece
 type Game interface {
 	//Players returns the players
-	Players() []Player
+	Players() []pattay.Player
 	//DistributeCards distrubutes card among players of the game
 	DistributeCards() error
 
 	//PlayHand begins play the hand
-	PlayHand(turn int, trump *string, lastHead Player) (Hand, error)
+	PlayHand(turn int, trump *string, lastHead pattay.Player) (Hand, error)
 
 	//ShuffleDeck shuffes the deck n times
 	ShuffleDeck(n int) error
@@ -21,11 +21,11 @@ type Game interface {
 	HandsOnGround() []Hand
 
 	//HandsWonBy returns the number of hands won by a player
-	HandsWonBy(player Player) int
+	HandsWonBy(player pattay.Player) int
 }
 
 type game struct {
-	players       []Player
+	players       []pattay.Player
 	deck          pattay.Deck
 	handsOnGround []Hand
 	handsWon      map[string]int
@@ -40,10 +40,10 @@ const (
 //NewGame NewGame
 func NewGame() Game {
 
-	playerNames := []string{EastPlayer, WestPlayer, NorthPlayer, SouthPlayer}
-	var players []Player
+	playerNames := []string{pattay.EastPlayer, pattay.WestPlayer, pattay.NorthPlayer, pattay.SouthPlayer}
+	var players []pattay.Player
 	for i := 0; i < 4; i++ {
-		players = append(players, NewPlayer(playerNames[i]))
+		players = append(players, pattay.NewPlayer(playerNames[i]))
 	}
 	deck := pattay.NewDeck()
 
@@ -62,7 +62,7 @@ func NewGame() Game {
 	}
 }
 
-func (g *game) Players() []Player {
+func (g *game) Players() []pattay.Player {
 	return g.players
 }
 
@@ -102,7 +102,7 @@ func canWinHand(turn int) bool {
 	return true
 }
 
-func (g *game) PlayHand(turn int, trump *string, lastHead Player) (Hand, error) {
+func (g *game) PlayHand(turn int, trump *string, lastHead pattay.Player) (Hand, error) {
 
 	hand := NewHand(trump)
 	cardsDelt := 0
@@ -126,7 +126,7 @@ func (g *game) PlayHand(turn int, trump *string, lastHead Player) (Hand, error) 
 
 	for i := 0; i < 4-cardsDelt; i++ {
 		rp, err := g.ring.Next()
-		player := (rp).(Player)
+		player := (rp).(pattay.Player)
 		if err != nil {
 			return nil, err
 		}
@@ -161,6 +161,6 @@ func (g *game) HandsOnGround() []Hand {
 	return g.handsOnGround
 }
 
-func (g *game) HandsWonBy(player Player) int {
+func (g *game) HandsWonBy(player pattay.Player) int {
 	return g.handsWon[player.Name()]
 }

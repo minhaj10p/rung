@@ -22,18 +22,18 @@ func TestHand_EmptyHandShouldHaveNoHouse(t *testing.T) {
 func TestHand_AddCardToHand(t *testing.T) {
 
 	hand := rung.NewHand(nil)
-	player := rung.NewPlayer(rung.SouthPlayer)
+	player := pattay.NewPlayer(pattay.SouthPlayer)
 	card := pattay.NewCard(pattay.Spade, pattay.Ace)
 	err := player.ReceiveCard(card)
 	assert.Nil(t, err)
-	hand.AddCard(player, rung.FirstCardAtHand)
+	hand.AddCard(player, pattay.FirstCardAtHand)
 	assert.Equal(t, len(hand.Cards()), 1)
 }
 
 func TestHand_NoSamePlayerCanAddToHand(t *testing.T) {
 
 	hand := rung.NewHand(nil)
-	p1 := rung.NewPlayer(rung.EastPlayer)
+	p1 := pattay.NewPlayer(pattay.EastPlayer)
 	c1 := pattay.NewCard(pattay.Spade, pattay.Ace)
 	c2 := pattay.NewCard(pattay.Club, pattay.Ace)
 	err := p1.ReceiveCard(c1)
@@ -41,20 +41,20 @@ func TestHand_NoSamePlayerCanAddToHand(t *testing.T) {
 	err = p1.ReceiveCard(c2)
 	assert.Nil(t, err)
 
-	err = hand.AddCard(p1, rung.FirstCardAtHand)
+	err = hand.AddCard(p1, pattay.FirstCardAtHand)
 	assert.Nil(t, err)
-	err = hand.AddCard(p1, rung.FirstCardAtHand)
+	err = hand.AddCard(p1, pattay.FirstCardAtHand)
 	assert.NotNil(t, err)
 }
 
 func TestHand_NoMoreThanFourCardsAtOneHand(t *testing.T) {
 
 	hand := rung.NewHand(nil)
-	player1 := rung.NewPlayer(rung.SouthPlayer)
-	player2 := rung.NewPlayer(rung.WestPlayer)
-	player3 := rung.NewPlayer(rung.EastPlayer)
-	player4 := rung.NewPlayer(rung.NorthPlayer)
-	player5 := rung.NewPlayer("Wrong player")
+	player1 := pattay.NewPlayer(pattay.SouthPlayer)
+	player2 := pattay.NewPlayer(pattay.WestPlayer)
+	player3 := pattay.NewPlayer(pattay.EastPlayer)
+	player4 := pattay.NewPlayer(pattay.NorthPlayer)
+	player5 := pattay.NewPlayer("Wrong player")
 
 	c1 := pattay.NewCard(pattay.Spade, pattay.Ace)
 	err := player1.ReceiveCard(c1)
@@ -76,15 +76,15 @@ func TestHand_NoMoreThanFourCardsAtOneHand(t *testing.T) {
 	err = player5.ReceiveCard(c5)
 	assert.Nil(t, err)
 
-	err = hand.AddCard(player1, rung.FirstCardAtHand)
+	err = hand.AddCard(player1, pattay.FirstCardAtHand)
 	assert.Nil(t, err)
-	err = hand.AddCard(player2, rung.FirstCardAtHand)
+	err = hand.AddCard(player2, pattay.FirstCardAtHand)
 	assert.Nil(t, err)
-	err = hand.AddCard(player3, rung.FirstCardAtHand)
+	err = hand.AddCard(player3, pattay.FirstCardAtHand)
 	assert.Nil(t, err)
-	err = hand.AddCard(player4, rung.FirstCardAtHand)
+	err = hand.AddCard(player4, pattay.FirstCardAtHand)
 	assert.Nil(t, err)
-	err = hand.AddCard(player5, rung.FirstCardAtHand)
+	err = hand.AddCard(player5, pattay.FirstCardAtHand)
 	assert.NotNil(t, err)
 
 }
@@ -100,11 +100,11 @@ func TestHand_EmptyHandShouldHaveNoHead(t *testing.T) {
 func TestHand_ColorOfHandShouldBeOfTheFirstCardPlacedOnHand(t *testing.T) {
 
 	hand := rung.NewHand(nil)
-	p1 := rung.NewPlayer(rung.WestPlayer)
+	p1 := pattay.NewPlayer(pattay.WestPlayer)
 	c1 := pattay.NewCard(pattay.Diamond, pattay.Ace)
 	err := p1.ReceiveCard(c1)
 	assert.Nil(t, err)
-	err = hand.AddCard(p1, rung.FirstCardAtHand)
+	err = hand.AddCard(p1, pattay.FirstCardAtHand)
 	assert.Nil(t, err)
 	houseOfHand, err := hand.House()
 	assert.Nil(t, err)
@@ -114,10 +114,10 @@ func TestHand_ColorOfHandShouldBeOfTheFirstCardPlacedOnHand(t *testing.T) {
 func TestHand_HeadShouldBeOfTheMostPowerfullCardAtHand(t *testing.T) {
 
 	hand := rung.NewHand(nil)
-	p1 := rung.NewPlayer(rung.SouthPlayer)
-	p2 := rung.NewPlayer(rung.EastPlayer)
-	p3 := rung.NewPlayer(rung.WestPlayer)
-	p4 := rung.NewPlayer(rung.NorthPlayer)
+	p1 := pattay.NewPlayer(pattay.SouthPlayer)
+	p2 := pattay.NewPlayer(pattay.EastPlayer)
+	p3 := pattay.NewPlayer(pattay.WestPlayer)
+	p4 := pattay.NewPlayer(pattay.NorthPlayer)
 
 	c1 := pattay.NewCard(pattay.Spade, pattay.King)
 	c2 := pattay.NewCard(pattay.Spade, pattay.Ace)
@@ -129,10 +129,10 @@ func TestHand_HeadShouldBeOfTheMostPowerfullCardAtHand(t *testing.T) {
 	p3.ReceiveCard(c3)
 	p4.ReceiveCard(c4)
 
-	hand.AddCard(p1, rung.FirstCardAtHand)
-	hand.AddCard(p2, rung.FirstCardAtHand)
-	hand.AddCard(p3, rung.FirstCardAtHand)
-	hand.AddCard(p4, rung.FirstCardAtHand)
+	hand.AddCard(p1, pattay.FirstCardAtHand)
+	hand.AddCard(p2, pattay.FirstCardAtHand)
+	hand.AddCard(p3, pattay.FirstCardAtHand)
+	hand.AddCard(p4, pattay.FirstCardAtHand)
 
 	head, err := hand.Head()
 	assert.Nil(t, err)
@@ -143,8 +143,8 @@ func TestHand_HeadShouldBeOfTheMostPowerfullCardAtHand(t *testing.T) {
 func TestHand_PlayerCannotPlayCard_OfDifferentHouseThanHouseOfHand(t *testing.T) {
 
 	hand := rung.NewHand(nil)
-	p1 := rung.NewPlayer(rung.SouthPlayer)
-	p2 := rung.NewPlayer(rung.EastPlayer)
+	p1 := pattay.NewPlayer(pattay.SouthPlayer)
+	p2 := pattay.NewPlayer(pattay.EastPlayer)
 
 	spadeAce := pattay.NewCard(pattay.Spade, pattay.Ace)
 	spadeKing := pattay.NewCard(pattay.Spade, pattay.King)
@@ -158,10 +158,10 @@ func TestHand_PlayerCannotPlayCard_OfDifferentHouseThanHouseOfHand(t *testing.T)
 	p2.ReceiveCard(spadeKing)
 
 	//p2 plays spadeKing as first card
-	hand.AddCard(p2, rung.FirstCardAtHand)
+	hand.AddCard(p2, pattay.FirstCardAtHand)
 
 	//p1 plays heartAce on a spade hand eve
-	err := hand.AddCard(p1, rung.SecondCardAtHand)
+	err := hand.AddCard(p1, pattay.SecondCardAtHand)
 	assert.NotNil(t, err)
 
 }
@@ -169,10 +169,10 @@ func TestHand_PlayerCannotPlayCard_OfDifferentHouseThanHouseOfHand(t *testing.T)
 func TestHand_PlayerCanMakeTrump(t *testing.T) {
 
 	hand := rung.NewHand(nil)
-	p1 := rung.NewPlayer(rung.SouthPlayer)
-	p2 := rung.NewPlayer(rung.NorthPlayer)
-	p3 := rung.NewPlayer(rung.EastPlayer)
-	p4 := rung.NewPlayer(rung.WestPlayer)
+	p1 := pattay.NewPlayer(pattay.SouthPlayer)
+	p2 := pattay.NewPlayer(pattay.NorthPlayer)
+	p3 := pattay.NewPlayer(pattay.EastPlayer)
+	p4 := pattay.NewPlayer(pattay.WestPlayer)
 
 	c1 := pattay.NewCard(pattay.Spade, pattay.Ace)
 	c2 := pattay.NewCard(pattay.Spade, pattay.King)
@@ -184,10 +184,10 @@ func TestHand_PlayerCanMakeTrump(t *testing.T) {
 	p3.ReceiveCard(c3)
 	p4.ReceiveCard(c4)
 
-	hand.AddCard(p1, rung.FirstCardAtHand)
-	hand.AddCard(p2, rung.FirstCardAtHand)
-	hand.AddCard(p4, rung.FirstCardAtHand)
-	hand.AddCard(p3, rung.FirstCardAtHand)
+	hand.AddCard(p1, pattay.FirstCardAtHand)
+	hand.AddCard(p2, pattay.FirstCardAtHand)
+	hand.AddCard(p4, pattay.FirstCardAtHand)
+	hand.AddCard(p3, pattay.FirstCardAtHand)
 
 	h, _ := hand.House()
 	trump, _ := hand.Trump()
@@ -200,10 +200,10 @@ func TestHand_CannotMakeTrumpAgainIfTrumpAlreadyDeclared(t *testing.T) {
 
 	trump := pattay.Spade
 	hand := rung.NewHand(&trump)
-	p1 := rung.NewPlayer(rung.SouthPlayer)
-	p2 := rung.NewPlayer(rung.NorthPlayer)
-	p3 := rung.NewPlayer(rung.EastPlayer)
-	p4 := rung.NewPlayer(rung.WestPlayer)
+	p1 := pattay.NewPlayer(pattay.SouthPlayer)
+	p2 := pattay.NewPlayer(pattay.NorthPlayer)
+	p3 := pattay.NewPlayer(pattay.EastPlayer)
+	p4 := pattay.NewPlayer(pattay.WestPlayer)
 
 	c1 := pattay.NewCard(pattay.Spade, pattay.Three)
 	c2 := pattay.NewCard(pattay.Spade, pattay.King)
@@ -215,10 +215,10 @@ func TestHand_CannotMakeTrumpAgainIfTrumpAlreadyDeclared(t *testing.T) {
 	p3.ReceiveCard(c3)
 	p4.ReceiveCard(c4)
 
-	hand.AddCard(p1, rung.FirstCardAtHand)
-	hand.AddCard(p2, rung.FirstCardAtHand)
-	hand.AddCard(p4, rung.FirstCardAtHand)
-	hand.AddCard(p3, rung.FirstCardAtHand)
+	hand.AddCard(p1, pattay.FirstCardAtHand)
+	hand.AddCard(p2, pattay.FirstCardAtHand)
+	hand.AddCard(p4, pattay.FirstCardAtHand)
+	hand.AddCard(p3, pattay.FirstCardAtHand)
 
 	h, _ := hand.House()
 	trump, _ = hand.Trump()
@@ -230,7 +230,7 @@ func TestHand_CannotMakeTrumpAgainIfTrumpAlreadyDeclared(t *testing.T) {
 }
 
 func TestHand_CardNotWithPlayerAddedInHand(t *testing.T) {
-	p := rung.NewPlayer(rung.SouthPlayer)
+	p := pattay.NewPlayer(pattay.SouthPlayer)
 	hand := rung.NewHand(nil)
 	err := hand.AddCard(p, 2)
 	assert.NotNil(t, err)
@@ -240,10 +240,10 @@ func TestHand_CutByTrumpCard(t *testing.T) {
 
 	trump := pattay.Diamond
 	hand := rung.NewHand(&trump)
-	p1 := rung.NewPlayer(rung.SouthPlayer)
-	p2 := rung.NewPlayer(rung.NorthPlayer)
-	p3 := rung.NewPlayer(rung.EastPlayer)
-	p4 := rung.NewPlayer(rung.WestPlayer)
+	p1 := pattay.NewPlayer(pattay.SouthPlayer)
+	p2 := pattay.NewPlayer(pattay.NorthPlayer)
+	p3 := pattay.NewPlayer(pattay.EastPlayer)
+	p4 := pattay.NewPlayer(pattay.WestPlayer)
 
 	c1 := pattay.NewCard(pattay.Spade, pattay.Three)
 	c2 := pattay.NewCard(pattay.Spade, pattay.King)
@@ -255,10 +255,10 @@ func TestHand_CutByTrumpCard(t *testing.T) {
 	p3.ReceiveCard(c3)
 	p4.ReceiveCard(c4)
 
-	hand.AddCard(p1, rung.FirstCardAtHand)
-	hand.AddCard(p2, rung.FirstCardAtHand)
-	hand.AddCard(p3, rung.FirstCardAtHand)
-	hand.AddCard(p4, rung.FirstCardAtHand)
+	hand.AddCard(p1, pattay.FirstCardAtHand)
+	hand.AddCard(p2, pattay.FirstCardAtHand)
+	hand.AddCard(p3, pattay.FirstCardAtHand)
+	hand.AddCard(p4, pattay.FirstCardAtHand)
 
 	x, err := hand.Head()
 	assert.Nil(t, err)
@@ -270,10 +270,10 @@ func TestHand_CutByBiggerTrumpCard(t *testing.T) {
 
 	trump := pattay.Diamond
 	hand := rung.NewHand(&trump)
-	p1 := rung.NewPlayer(rung.SouthPlayer)
-	p2 := rung.NewPlayer(rung.NorthPlayer)
-	p3 := rung.NewPlayer(rung.EastPlayer)
-	p4 := rung.NewPlayer(rung.WestPlayer)
+	p1 := pattay.NewPlayer(pattay.SouthPlayer)
+	p2 := pattay.NewPlayer(pattay.NorthPlayer)
+	p3 := pattay.NewPlayer(pattay.EastPlayer)
+	p4 := pattay.NewPlayer(pattay.WestPlayer)
 
 	c1 := pattay.NewCard(pattay.Spade, pattay.Three)
 	c2 := pattay.NewCard(pattay.Diamond, pattay.Ace)
@@ -285,10 +285,10 @@ func TestHand_CutByBiggerTrumpCard(t *testing.T) {
 	p3.ReceiveCard(c3)
 	p4.ReceiveCard(c4)
 
-	hand.AddCard(p1, rung.FirstCardAtHand)
-	hand.AddCard(p2, rung.FirstCardAtHand)
-	hand.AddCard(p3, rung.FirstCardAtHand)
-	hand.AddCard(p4, rung.FirstCardAtHand)
+	hand.AddCard(p1, pattay.FirstCardAtHand)
+	hand.AddCard(p2, pattay.FirstCardAtHand)
+	hand.AddCard(p3, pattay.FirstCardAtHand)
+	hand.AddCard(p4, pattay.FirstCardAtHand)
 
 	x, err := hand.Head()
 	assert.Nil(t, err)
@@ -298,14 +298,14 @@ func TestHand_CutByBiggerTrumpCard(t *testing.T) {
 
 func TestHand_SameCardsInOneHand(t *testing.T) {
 	hand := rung.NewHand(nil)
-	p1 := rung.NewPlayer(rung.SouthPlayer)
-	p2 := rung.NewPlayer(rung.WestPlayer)
+	p1 := pattay.NewPlayer(pattay.SouthPlayer)
+	p2 := pattay.NewPlayer(pattay.WestPlayer)
 	c := pattay.NewCard(pattay.Spade, pattay.Ace)
 	p1.ReceiveCard(c)
 	p2.ReceiveCard(c)
 
-	hand.AddCard(p1, rung.FirstCardAtHand)
-	err := hand.AddCard(p2, rung.FirstCardAtHand)
+	hand.AddCard(p1, pattay.FirstCardAtHand)
+	err := hand.AddCard(p2, pattay.FirstCardAtHand)
 	assert.Error(t, err)
 }
 

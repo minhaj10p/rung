@@ -12,7 +12,7 @@ type Hand interface {
 	Cards() []pattay.Card
 
 	//AddCard adds a card at the current hand
-	AddCard(playedBy Player, cardAtHandIndex int) error
+	AddCard(playedBy pattay.Player, cardAtHandIndex int) error
 
 	//HasCard checks if hand has card
 	HasCard(c pattay.Card) (hasCard bool, atIndex int)
@@ -21,7 +21,7 @@ type Hand interface {
 	IsComplete() bool
 
 	//Head returns the player who has thrown the biggest card
-	Head() (Player, error)
+	Head() (pattay.Player, error)
 
 	//House returns the House/Color of the hand being played
 	House() (string, error)
@@ -31,9 +31,9 @@ type Hand interface {
 }
 type hand struct {
 	cards     []pattay.Card
-	hasPlayed []Player
+	hasPlayed []pattay.Player
 	house     string
-	head      Player
+	head      pattay.Player
 	trump     string
 }
 
@@ -68,7 +68,7 @@ func (h *hand) HasCard(c pattay.Card) (bool, int) {
 	return true, at
 
 }
-func (h *hand) HasAlreadyPlayed(pl Player) bool {
+func (h *hand) HasAlreadyPlayed(pl pattay.Player) bool {
 
 	for _, player := range h.hasPlayed {
 		if player.Name() == pl.Name() {
@@ -87,7 +87,7 @@ func (h *hand) isSameHouse(c pattay.Card) bool {
 	return c.House() == h.house
 }
 
-func (h *hand) validateCard(pl Player, c pattay.Card) error {
+func (h *hand) validateCard(pl pattay.Player, c pattay.Card) error {
 
 	if h.IsComplete() {
 		return fmt.Errorf("hand is complete")
@@ -121,14 +121,14 @@ func (h *hand) isTrumpDeclared() bool {
 	return h.trump != ""
 }
 
-func (h *hand) setHeadForBiggestCard(cards []pattay.Card, c pattay.Card, house string, pl Player) {
+func (h *hand) setHeadForBiggestCard(cards []pattay.Card, c pattay.Card, house string, pl pattay.Player) {
 	biggestCardAtHand := pattay.GetBiggestCard(cards, house)
 	if c.Number() > biggestCardAtHand.Number() {
 		h.head = pl
 	}
 
 }
-func (h *hand) AddCard(pl Player, cardAtHandIndex int) error {
+func (h *hand) AddCard(pl pattay.Player, cardAtHandIndex int) error {
 
 	c, err := pl.DrawCard(cardAtHandIndex)
 	if err != nil {
@@ -186,7 +186,7 @@ func (h *hand) AddCard(pl Player, cardAtHandIndex int) error {
 
 }
 
-func (h *hand) Head() (Player, error) {
+func (h *hand) Head() (pattay.Player, error) {
 	if h.IsEmpty() {
 		return nil, fmt.Errorf("no head because no card has been played yet")
 	}

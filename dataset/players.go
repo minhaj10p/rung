@@ -5,7 +5,7 @@ import (
 	"github.com/minhajuddinkhan/rung"
 )
 
-func PlayerWithTwoOfClubs(g rung.Game) (rung.Player, int) {
+func PlayerWithTwoOfClubs(g rung.Game) (pattay.Player, int) {
 
 	players := g.Players()
 
@@ -20,11 +20,11 @@ func PlayerWithTwoOfClubs(g rung.Game) (rung.Player, int) {
 
 }
 
-func PLayersWithoutTwoOfClubs(g rung.Game) []rung.Player {
+func PLayersWithoutTwoOfClubs(g rung.Game) []pattay.Player {
 
 	twoClub := pattay.NewCard(pattay.Club, pattay.Two)
 
-	var without2Clubs []rung.Player
+	var without2Clubs []pattay.Player
 	for _, p := range g.Players() {
 		if hasCard, _ := p.HasCard(twoClub); !hasCard {
 			without2Clubs = append(without2Clubs, p)
@@ -35,18 +35,18 @@ func PLayersWithoutTwoOfClubs(g rung.Game) []rung.Player {
 }
 
 //PlayerWithAceOfSpade PlayerWithAceOfSpade
-func PlayerWithAceOfSpade(g rung.Game) (rung.Player, int) {
+func PlayerWithAceOfSpade(g rung.Game) (pattay.Player, int) {
 	aceOfSpade := pattay.NewCard(pattay.Spade, pattay.Ace)
 	return PlayerWithCard(g, aceOfSpade)
 }
 
 //PlayersWithoutAceOfSpade PlayersWithoutAceOfSpade
-func PlayersWithoutAceOfSpade(g rung.Game) []rung.Player {
+func PlayersWithoutAceOfSpade(g rung.Game) []pattay.Player {
 	twoClub := pattay.NewCard(pattay.Spade, pattay.Ace)
 	return PlayersWithoutCard(g, twoClub)
 }
 
-func PlayerWithCard(g rung.Game, card pattay.Card) (rung.Player, int) {
+func PlayerWithCard(g rung.Game, card pattay.Card) (pattay.Player, int) {
 	for _, p := range g.Players() {
 		if has, at := p.HasCard(card); has {
 			return p, at
@@ -55,8 +55,8 @@ func PlayerWithCard(g rung.Game, card pattay.Card) (rung.Player, int) {
 	return nil, -1
 }
 
-func PlayersWithoutCard(g rung.Game, card pattay.Card) []rung.Player {
-	var without []rung.Player
+func PlayersWithoutCard(g rung.Game, card pattay.Card) []pattay.Player {
+	var without []pattay.Player
 	for _, p := range g.Players() {
 		if hasCard, _ := p.HasCard(card); !hasCard {
 			without = append(without, p)
